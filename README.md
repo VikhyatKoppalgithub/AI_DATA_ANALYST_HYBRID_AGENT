@@ -385,6 +385,17 @@ structured so that backend drops in behind the same interface.
 **Routing is a single classification call.** A wrong route degrades everything
 downstream, and the 1.5b model gets it wrong on questions the 14B handles.
 
+**Phrasing decides the route, and sometimes decides it wrongly.** `ROUTE_SYSTEM`
+lists "a ranking" among the things belonging on the `other` route, so *"which
+team and priority had the sharpest percentage rise in SLA breaches, and how much
+did it actually matter?"* goes to generated code — 5 times out of 5 on the 14B.
+That is a contribution question wearing a ranking's clothes, and the change
+engine would answer it better, because resisting the biggest-percentage decoy is
+precisely what the engine is for. A verified path and its decoy detection are
+lost on wording alone. `support_decoy_pressure` asserts the current behaviour
+rather than the desired one; fixing it means changing the routing prompt, which
+is a change I would want A/B'd across both models before trusting it.
+
 **Both fixtures are synthetic.** They contain the mess I thought to add. Real
 exports contain mess I did not — the first real file tried (New Zealand's Annual
 Enterprise Survey) failed three separate ways, all since fixed and covered by
@@ -432,6 +443,7 @@ src/analyst/
   evals/               cases, deterministic graders, runner
 app.py                 Streamlit UI
 scripts/               fixture generators, each printing its ground truth
+  fetch_nyc_payroll.py real 1.1M-row export — downloaded, not committed
 tests/                 122 tests, no model required
 ```
 

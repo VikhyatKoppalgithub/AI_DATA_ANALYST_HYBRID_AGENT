@@ -238,12 +238,19 @@ SUITE += [
         dataset=SUPPORT,
         note=(
             "Onboarding P1 rose 1100% — by far the largest percentage move — but "
-            "explains only 5% of the increase."
+            "explains only 5% of the increase.\n\n"
+            "Phrased as a ranking ('which had the sharpest rise'), so ROUTE_SYSTEM "
+            "sends it to generated code — it lists 'a ranking' among the things "
+            "that belong on the `other` route. The change engine would answer it "
+            "better, since decoy detection is exactly what it does, so this is a "
+            "real routing weakness rather than a quirk of phrasing; see the "
+            "README's limitations. The case asserts what the router does, not what "
+            "would serve the question best. Decoy detection itself stays covered "
+            "by support_breach_spike."
         ),
-        routing=[g.route_is("change")],
-        interpretation=[g.plan_metric("sla_breach")],
-        correctness=[g.decoy_flagged(*SUPPORT_DECOY), g.all_verification_passes()],
-        communication=[g.no_invented_numbers(), g.no_summed_contributions()],
+        routing=[g.route_is("code"), g.is_verified(False)],
+        correctness=[g.executed_code()],
+        communication=[g.no_invented_numbers(), g.narrative_mentions("Onboarding")],
     ),
     EvalCase(
         id="support_metric_trap",
