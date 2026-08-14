@@ -226,10 +226,15 @@ def resolve_question(
             detail += f", values: {', '.join(list(column.stats['top_values'])[:5])}"
         lines.append(detail + ")")
     if date_range:
-        lines.append(
-            "\nCandidate time axes — choose the one the question is about, which "
-            "is not always the first:\n" + date_range
-        )
+        # Deliberately the original wording, with the axes as a list beneath it.
+        # An earlier version of this fix headed the block "Candidate time axes —
+        # choose the one the question is about, which is not always the first",
+        # and qwen2.5-coder:1.5b then returned an empty `period_after` on 4 of 4
+        # attempts where the plain heading returned "2026-03" on 4 of 4. An empty
+        # period falls back to the latest one, so "why did revenue drop in March"
+        # was silently answered about May. Listing the axes is the fix; steering
+        # language on top of it costs more than it buys on a small model.
+        lines.append("\nData covers:\n" + date_range)
 
     # The profiler already detects nested aggregation levels, mis-stored types,
     # and duplicate rows. Computing that and then not showing it to the planner
