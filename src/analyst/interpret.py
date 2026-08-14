@@ -15,7 +15,16 @@ import pandas as pd
 
 from analyst.analysis import ChangeAnalysis, analyze_change
 from analyst.llm.base import Completion, Provider, ProviderError
-from analyst.profiler import DatasetProfile
+from analyst.profiler import _ID_NAME_RE, DatasetProfile
+
+# A dimension is only useful if its segments are readable. Real files carry
+# high-cardinality text that profiles as categorical — 125,431 surnames in NYC
+# payroll are 11% of the rows — and breaking a change down by one produces
+# hundreds of thousands of meaningless slices. Both conditions must hold: an
+# absolute floor keeps legitimate wide dimensions (1,616 job titles over 1.1M
+# rows), and the ratio is what actually identifies a per-entity column.
+MAX_DIMENSION_UNIQUE = 1_000
+MAX_DIMENSION_RATIO = 0.05
 
 PLAN_SCHEMA = {
     "type": "object",
@@ -139,11 +148,33 @@ class Answer:
 
 
 def _numeric_candidates(profile: DatasetProfile) -> list[str]:
-    return [
-        c.name
-        for c in profile.columns
+    """Numeric columns, real measures first.
+
+    A low-cardinality integer named like a code — `payroll_number`, 159 agency
+    codes across 1.1M rows — is numeric but is not a quantity. It escapes the
+    profiler's identifier rule, which requires near-uniqueness, so it would
+    otherwise be the *first* thing a hallucinated metric falls back to. Ordering
+    is enough; excluding it outright would break a file whose only numeric
+    column is named that way.
+    """
+    numeric = [
+        c.name for c in profile.columns
         if c.semantic_type in ("numeric", "numeric_as_string")
     ]
+    measures = [n for n in numeric if not _ID_NAME_RE.search(n)]
+    coded = [n for n in numeric if _ID_NAME_RE.search(n)]
+    return measures + coded
+
+
+def _too_granular(profile: DatasetProfile, name: str) -> bool:
+    """Is this column a per-entity label rather than a segment worth grouping by?"""
+    column = next((c for c in profile.columns if c.name == name), None)
+    if column is None or not profile.n_rows:
+        return False
+    return (
+        column.unique_count > MAX_DIMENSION_UNIQUE
+        and column.unique_count / profile.n_rows > MAX_DIMENSION_RATIO
+    )
 
 
 def _date_candidates(profile: DatasetProfile) -> list[str]:
@@ -154,6 +185,29 @@ def _date_candidates(profile: DatasetProfile) -> list[str]:
 
 def _dimension_candidates(profile: DatasetProfile) -> list[str]:
     return [c.name for c in profile.columns if c.semantic_type in ("categorical", "boolean")]
+
+
+def _describe_time_axes(profile: DatasetProfile, frame: pd.DataFrame) -> str:
+    """Every column that could be the time axis, each with its own range.
+
+    Describing only the first is actively misleading when a file carries both a
+    reporting period and an unrelated per-row date. NYC payroll has `fiscal_year`
+    (2024-2025) alongside `agency_start_date` (hire dates reaching back decades),
+    and datetimes sort ahead of years — so the planner, told to infer the year
+    from the range it is shown, was shown the hire dates.
+    """
+    lines = []
+    for name in _date_candidates(profile):
+        if name not in frame.columns:
+            continue
+        series = frame[name].dropna()
+        if series.empty:
+            continue
+        if pd.api.types.is_datetime64_any_dtype(series):
+            lines.append(f"- {name}: {series.min():%Y-%m-%d} to {series.max():%Y-%m-%d}")
+        else:
+            lines.append(f"- {name}: {series.min()} to {series.max()} (annual; periods are YYYY)")
+    return "\n".join(lines)
 
 
 def resolve_question(
@@ -172,7 +226,10 @@ def resolve_question(
             detail += f", values: {', '.join(list(column.stats['top_values'])[:5])}"
         lines.append(detail + ")")
     if date_range:
-        lines.append(f"\nData covers: {date_range}")
+        lines.append(
+            "\nCandidate time axes — choose the one the question is about, which "
+            "is not always the first:\n" + date_range
+        )
 
     # The profiler already detects nested aggregation levels, mis-stored types,
     # and duplicate rows. Computing that and then not showing it to the planner
@@ -218,8 +275,26 @@ def _validate_plan(
     dropped = [d for d in raw.get("dimensions", []) if d not in known]
     if dropped:
         warnings.append(f"Ignored unknown dimension(s): {', '.join(dropped)}.")
+
+    # Cardinality is checked here, not only in the engine's own auto-selection.
+    # analyze_change caps candidates at 50 distinct values, but only when the
+    # plan names none — a dimension the model asked for went straight through.
+    sizes = {c.name: c.unique_count for c in profile.columns}
+    granular = [d for d in dimensions if _too_granular(profile, d)]
+    if granular:
+        warnings.append(
+            "Ignored dimension(s) with too many distinct values to group by: "
+            + ", ".join(f"{d} ({sizes.get(d, 0):,} values)" for d in granular)
+            + "."
+        )
+        dimensions = [d for d in dimensions if d not in granular]
+
     if not dimensions:
-        dimensions = [d for d in _dimension_candidates(profile) if d != metric]
+        dimensions = [
+            d
+            for d in _dimension_candidates(profile)
+            if d != metric and not _too_granular(profile, d)
+        ]
         warnings.append("Model named no usable dimensions; using all categorical columns.")
 
     period = raw.get("period_after") or None
@@ -336,7 +411,7 @@ def _analysis_facts(analysis: ChangeAnalysis, filters: str = "") -> str:
             f"  {s.segment} moved {s.own_pct_change:+.1f}% on its own, the largest "
             f"percentage move in the data, but explains only {s.contribution_pp:+.2f} pp "
             f"of the {analysis.pct_change:+.1f}% total because it was just "
-            f"{s.share_of_total_before:.1f}% of revenue.",
+            f"{s.share_of_total_before:.1f}% of the starting {analysis.metric}.",
         ]
 
     failed = [c for c in analysis.checks if not c.passed]
@@ -354,15 +429,7 @@ def answer_question(
     question: str,
 ) -> Answer:
     """Full free path: interpret -> compute exactly -> narrate."""
-    dates = _date_candidates(profile)
-    date_range = ""
-    if dates:
-        series = frame[dates[0]].dropna()
-        if not series.empty:
-            if pd.api.types.is_datetime64_any_dtype(series):
-                date_range = f"{series.min():%Y-%m-%d} to {series.max():%Y-%m-%d}"
-            else:
-                date_range = f"{series.min()} to {series.max()} (annual; periods are YYYY)"
+    date_range = _describe_time_axes(profile, frame)
 
     plan, plan_completion = resolve_question(
         provider, profile, question, date_range=date_range, frame=frame

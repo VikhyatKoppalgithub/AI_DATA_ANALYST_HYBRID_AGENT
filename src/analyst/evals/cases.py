@@ -44,6 +44,17 @@ SUPPORT_MEDIAN_RESOLUTION = 25.18
 SUPPORT_OPEN_TICKETS = 2210
 SUPPORT_REOPENED = 2688
 
+# The averaging trap, measured directly from the prepared frame. Summing is not
+# an approximation of averaging here — it is the opposite sign:
+#
+#   mean  resolution_hours  32.5769 -> 32.6414   = +0.20%
+#   total resolution_hours   225,660 -> 222,712  = -1.31%   <- what summing gives
+#
+# The engine can only produce the second, so `NON_SUMMABLE` routes the question
+# to generated code instead. That routing IS the mitigation, so it is what this
+# case asserts.
+SUPPORT_MEAN_RESOLUTION_MAR = 32.64
+
 
 @dataclass
 class EvalCase:
@@ -239,11 +250,18 @@ SUITE += [
         question="How did average resolution time change in March 2026?",
         dataset=SUPPORT,
         note=(
-            "Two plausible numeric columns. Asking about resolution time must not "
-            "be answered with the breach count."
+            "The averaging trap. The change engine only sums, and on this metric "
+            "summing gives -1.31% where the mean moved +0.20% — the opposite sign. "
+            "So the correct behaviour is to refuse the engine and generate code. "
+            "This case previously asserted change-route behaviour, which "
+            "contradicted the NON_SUMMABLE regex added to mitigate exactly this; "
+            "it scored 1/5 while the committed eval report still showed 5/5."
         ),
-        interpretation=[g.plan_metric("resolution_hours"), g.plan_period("2026-03")],
-        correctness=[g.all_verification_passes()],
+        routing=[g.route_is("code"), g.is_verified(False)],
+        correctness=[
+            g.executed_code(),
+            g.reports_value(SUPPORT_MEAN_RESOLUTION_MAR, tolerance=0.05),
+        ],
         communication=[g.no_invented_numbers(), g.no_causal_claim()],
     ),
     EvalCase(

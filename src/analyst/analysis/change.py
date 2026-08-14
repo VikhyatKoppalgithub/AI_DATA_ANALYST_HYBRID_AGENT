@@ -28,6 +28,17 @@ DIFFUSE_THRESHOLD_PP = 0.35  # top slice explaining less than this share => diff
 DECOY_MIN_OWN_CHANGE = 25.0  # percent, on the slice's own base
 DECOY_MAX_SHARE = 0.10  # fraction of the total change the slice may explain
 
+# Counter-movement, as a share of the net change, above which the net is hiding
+# substantial two-way movement and "what accounts for the change" needs a
+# different answer than a single leading contributor.
+#
+# Calibrated on real data: both synthetic fixtures are built around one
+# concentrated shock and peak at 1.5%, but NYC payroll — where overtime fell
+# 4.5% net while Correction and Sanitation *rose* by 4.27pp against Police
+# falling 5.63pp — reaches 146%. Anything in between separates them; 50% leaves
+# the fixtures a wide margin.
+OFFSETTING_THRESHOLD = 0.50
+
 
 @dataclass
 class Check:
@@ -93,6 +104,21 @@ class Breakdown:
     def leading(self, direction: int) -> Slice | None:
         ranked = self.ranked(direction)
         return ranked[0] if ranked else None
+
+    def counter_movers(self, direction: int) -> list[Slice]:
+        """Slices moving *against* the overall change, largest first.
+
+        `ranked()` deliberately discards these — when a metric falls, the story
+        is the segments that fell. But they are not noise: if they are large,
+        the net change is a residue of two-way movement, and a narrative built
+        only from `ranked()` cannot say so.
+        """
+        against = [s for s in self.slices if s.change * direction < 0]
+        return sorted(against, key=lambda s: abs(s.contribution_pp), reverse=True)
+
+    def counter_movement(self, direction: int) -> float:
+        """Total absolute contribution of the slices moving against the change."""
+        return sum(abs(s.contribution_pp) for s in self.counter_movers(direction))
 
 
 @dataclass
@@ -390,6 +416,36 @@ def _run_checks(
                     f"largest single contributor explains {share:.0%} of the move"
                     + ("" if share >= DIFFUSE_THRESHOLD_PP else " — the change is broad, not driven by one segment")
                 ),
+            )
+        )
+
+    # A net change can be the residue of large movement in both directions. The
+    # concentration check above cannot see it: it is one-sided, so a top
+    # contributor explaining 126% of the move passes as "concentrated" when what
+    # that figure actually means is that other segments moved the other way.
+    # Reporting only the leading faller is then true but materially incomplete.
+    if analysis.pct_change and analysis.breakdowns:
+        worst_dim, worst_ratio = "", 0.0
+        for name, breakdown in analysis.breakdowns.items():
+            ratio = breakdown.counter_movement(analysis.direction) / abs(analysis.pct_change)
+            if ratio > worst_ratio:
+                worst_dim, worst_ratio = name, ratio
+
+        passed = worst_ratio <= OFFSETTING_THRESHOLD
+        detail = f"largest counter-movement is {worst_ratio:.0%} of the net change"
+        if not passed:
+            leaders = analysis.breakdowns[worst_dim].counter_movers(analysis.direction)[:2]
+            named = ", ".join(f"{s.segment} {s.contribution_pp:+.2f} pp" for s in leaders)
+            detail = (
+                f"by '{worst_dim}', segments moving the other way total "
+                f"{worst_ratio:.0%} of the net {analysis.pct_change:+.1f}% change "
+                f"({named}) — the net understates movement on both sides"
+            )
+        checks.append(
+            Check(
+                name="Change is not dominated by offsetting movements",
+                passed=passed,
+                detail=detail,
             )
         )
 

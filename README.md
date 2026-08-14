@@ -36,7 +36,7 @@ ollama pull qwen2.5-coder:14b       # ~9GB
 
 python scripts/make_demo_data.py        # sales fixture
 python scripts/make_support_data.py     # support fixture
-pytest                                  # 109 tests, no model needed
+pytest                                  # 122 tests, no model needed
 ```
 
 Then either interface:
@@ -217,7 +217,8 @@ have ground truth at all.
 
 ### Data shapes handled
 
-Added after a real government-statistics export failed on all three counts:
+Added after two real government exports failed — NZ's Annual Enterprise Survey on
+the first three, NYC's Citywide Payroll on the last two:
 
 | shape | example | how |
 |---|---|---|
@@ -225,6 +226,8 @@ Added after a real government-statistics export failed on all three counts:
 | **annual** | `Year` = `2025`, no date column | a `year` semantic type; `to_datetime(2025)` silently yields 1970 + 2025ns, so year columns bypass it |
 | **long / tidy** | one `Value` column, 41 measures in `Variable_name`, 3 units | plans carry `filters` pinning one measure and one unit |
 | **hierarchical** | `Level 1` totals containing `Level 4` detail | the profiler flags nested levels and the planner pins one |
+| **per-entity columns** | `last_name` — 125,431 distinct, 11% of rows, profiles as categorical | a dimension is dropped above 1,000 distinct *and* 5% of rows, so 1,616 job titles survive and surnames do not |
+| **competing time axes** | `fiscal_year` (2024–25) beside `agency_start_date` (hire dates from 1901) | every candidate axis is described to the planner with its own range, not just the first |
 
 ---
 
@@ -323,6 +326,25 @@ correlation stated before any code ran; a "significantly higher than the next
 rep" claim when only `.head(1)` had been computed; a percentage derived in the
 model's head from a real count. All three needed different guards.
 
+**A net change can be the residue of movement in both directions.** NYC's payroll
+export (1.1M rows, FY2024 vs FY2025) reported overtime pay down **−4.47%**, led by
+the Police Department. True, and materially incomplete:
+
+```
+gross down  -8.75 pp   (Police -5.63, HRA -1.16, Fire -1.02, …)
+gross up    +4.27 pp   (Correction +2.64, Sanitation +1.29, …)
+net         -4.47 pp
+```
+
+Correction's overtime *rose* by nearly a third of the gross decline, and the
+narrative was structurally incapable of saying so — `ranked()` filters to slices
+moving *with* the change, by design. The tell was the concentration check
+reporting that one contributor explained **126%** of the move, and passing,
+because `share >= 0.35` is one-sided. A figure above 100% is not concentration;
+it is the signature of offsetting movements. There is now a separate check for
+it, and it fails. Both synthetic fixtures peak at 1.5% counter-movement, so
+neither could ever have caught this.
+
 **Fact *presentation* moves the answer as much as prompt wording.** Handed a flat
 ranked list mixing dimensions, the model wrote that three segments "each
 contributed over 10 percentage points" — silently adding overlapping partitions.
@@ -410,7 +432,7 @@ src/analyst/
   evals/               cases, deterministic graders, runner
 app.py                 Streamlit UI
 scripts/               fixture generators, each printing its ground truth
-tests/                 109 tests, no model required
+tests/                 122 tests, no model required
 ```
 
 Tests need no model or API key. The eval suite needs Ollama.

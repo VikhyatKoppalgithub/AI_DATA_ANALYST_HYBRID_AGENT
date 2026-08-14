@@ -153,8 +153,17 @@ def _infer_semantic_type(
         return "year", "an integer year — usable as the time axis, not a measure"
     if ptypes.is_numeric_dtype(s):
         # Integer-ish, near-unique, and named like a key -> an ID, not a measure.
-        if _ID_NAME_RE.search(name) and unique_count / non_null > 0.95:
-            return "identifier", "numeric but reads as an identifier — do not aggregate"
+        if _ID_NAME_RE.search(name):
+            if unique_count / non_null > 0.95:
+                return "identifier", "numeric but reads as an identifier — do not aggregate"
+            # Named like a code but nowhere near unique: a coded category, such
+            # as 159 agency codes in `payroll_number` across 1.1M payroll rows.
+            # Summing it is meaningless, but it is not an identifier either, so
+            # it stays numeric and carries the warning instead of a reclassification.
+            return "numeric", (
+                f"named like a code and has only {unique_count:,} distinct values "
+                "— probably a category, not a quantity to sum"
+            )
         return "numeric", None
 
     text = _clean_str_series(s)
