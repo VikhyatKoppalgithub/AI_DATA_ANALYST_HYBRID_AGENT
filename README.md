@@ -233,60 +233,79 @@ the first three, NYC's Citywide Payroll on the last two:
 
 ## Results
 
-Three full passes of the suite per model, on an M4 MacBook Air. 96 runs, 26
+Three full passes of the suite per model, on an M4 MacBook Air. 96 runs, 53
 minutes, $0.00.
 
 | model | score | routing | interpretation | correctness | communication | median s |
 |---|---|---|---|---|---|---|
-| `qwen2.5-coder:14b` | **299/306 (98%)** | 100% | 100% | 100% | 93% | 25s |
-| `qwen2.5-coder:1.5b` | 266/306 (87%) | 85% | 100% | 87% | 80% | 5s |
+| `qwen2.5-coder:14b` | **301/306 (98%)** | 100% | 100% | 98% | 97% | 25s |
+| `qwen2.5-coder:1.5b` | 245/306 (80%) | 75% | 96% | 73% | 83% | 9s |
 
 ### Variance across the three runs
 
 | model | mean | sd | worst | best | unstable cases |
 |---|---|---|---|---|---|
-| `qwen2.5-coder:14b` | 97.7% | 0.6 pp | 97.1% | 98.0% | `channel_question` |
-| `qwen2.5-coder:1.5b` | 86.9% | 1.5 pp | 85.3% | 88.2% | `latest_period`, `mean_units`, `support_breach_spike` |
+| `qwen2.5-coder:14b` | 98.4% | 0.6 pp | 98.0% | 99.0% | `support_metric_trap` |
+| `qwen2.5-coder:1.5b` | 80.1% | 0.6 pp | 79.4% | 80.4% | `march_drop`, `decoy_pressure`, `support_decoy_pressure`, `support_median_resolution` |
 
 The 14B is stable enough that a single run is close to its true score. The 1.5b
-is not: one case in five moves between runs, and earlier single passes put it
-anywhere from 85% to 98%. Reporting one run as *the* number would have been
+is not: a quarter of its cases move between runs, and earlier single passes put
+it anywhere from 85% to 98%. Reporting one run as *the* number would have been
 wrong by up to 11 points.
+
+> **On an earlier published number.** This table read 299/306 and 266/306 for a
+> while, and neither reproduced. Three eval cases were asserting behaviour the
+> code had deliberately stopped having — `support_metric_trap` and
+> `support_decoy_pressure` both asserted the change route while the router
+> correctly sends them to generated code — so the old figures measured a version
+> that no longer existed. The 14B is unchanged at 98%; the 1.5b's real score is
+> 80%, not 87%, because those cases now demand the code route and routing is
+> exactly where a 1.5B model is weakest. Re-running your own headline number is
+> the only way to find this, and it is worth doing before anyone else does.
 
 ### Reading the families
 
-**Interpretation is 100% on both models.** Mapping a question onto the right
-metric, period, and dimensions is the easy part, and model size does not help.
-Everything that separates the two models is elsewhere.
+**Interpretation is near-perfect on both** — 100% on the 14B, 96% on the 1.5b.
+Mapping a question onto the right metric, period, and dimensions is the easy
+part, and model size barely helps. Everything separating the two models is
+elsewhere.
 
-**Correctness is 100% on the 14B** across both fixtures — every computed figure
-matches independently derived ground truth, which is what the deterministic
-engine is for. On the 1.5b it drops to 87%, but almost entirely as a *consequence
-of routing*: send a ranking question to the change engine and there is no
-ranking to be correct about.
+**The 14B's five remaining failures are both on the code route**, and they are
+specific:
 
-**Routing is where size shows.** The 1.5b scores 85%, and its single worst case
-is total: `top_sales_rep` scored **1/6 in all three runs**, because it routed
-"which sales rep had the highest total revenue?" to change analysis instead of
-generated code. Five downstream assertions then failed for lack of anything to
-check.
+```
+3x  support_decoy_pressure   narrative mentions Onboarding
+2x  support_metric_trap      reports the value 32.64
+```
 
-**Communication is the 14B's only real weakness (93%)**, and the failures are the
-same shape every time:
+The first is the routing weakness measuring itself. That question — *which team
+and priority rose most, and did it matter?* — is a contribution question, and
+the change engine would name `Onboarding` from its decoy detection. Routed to
+generated code instead, the 14B fails to identify it in **all three runs**. The
+case asserts current behaviour, and current behaviour is worse than the engine's
+would be. That is the argument for fixing the router, stated in data.
+
+**Routing is where size shows.** The 1.5b scores 75%, and its worst case is
+total: `top_sales_rep` scored **1/6 in all three runs**, routing "which sales rep
+had the highest total revenue?" to change analysis instead of generated code.
+Five downstream assertions then failed for lack of anything to check. Its
+correctness figure (73%) is mostly this same effect one step downstream — send a
+ranking to the change engine and there is no ranking to be correct about.
+
+**The 14B's communication weakness did not reproduce.** Earlier passes put it at
+93%, with six of seven failures being a real count decorated with a percentage
+worked out in the model's head:
 
 > There are **2,210** tickets still open, meaning they have no `closed_at` value.
 > This represents approximately **6.04%** of the total tickets.
 
-The count is computed and correct. The percentage is not — it was derived in the
-model's head from the row count. It is even arithmetically right here, which is
-precisely why the rule exists: the same habit produced *13pp and 3pp* against a
-true *15.4 and 0.61*. Six of the 14B's seven failures are this, on the two
-counting cases, in every run. An explicit prompt rule against deriving figures
-did not stop it.
-
-That is a finding, not a grader artifact. The honest summary is that the
+In this run both counting cases scored 4/4 across all three passes and
+communication came in at 97%. The habit is real — it is the same one that
+produced *13pp and 3pp* against a true *15.4 and 0.61* — but it is evidently not
+as stable as "every run" implied, which is its own argument for repeating the
+measurement rather than quoting it once. The guard analysis stands regardless:
 fabrication guards catch answers with *no* computation behind them, and do not
-stop a model from decorating a real number with an underived one.
+stop a model decorating a real number with an underived one.
 
 ---
 
@@ -356,14 +375,13 @@ fencing off the alternative slicings fixed it.
 ## Limitations
 
 **The change engine only sums.** Ask *"how did average resolution time change?"*
-and it reports the change in the **total**. On the support fixture that is
-**−1.3%** where the true change in the mean is **+0.2%** — the opposite sign.
-The router sends the question to the engine because it is a change-over-time
-question, and the metric is chosen correctly; the aggregation is simply wrong for
-the question. **The eval suite does not catch this**: `support_metric_trap`
-asserts only that `resolution_hours` was selected. The fix is to route
-mean/median/rate questions to generated code, or to teach the engine
-mean-difference decomposition.
+and summing gives **−1.31%** where the true change in the mean is **+0.20%** —
+the opposite sign, not an approximation. A `NON_SUMMABLE` regex now forces
+average/median/rate questions onto the code path, and `support_metric_trap`
+asserts that routing, so the mitigation is tested. But the mitigation is a word
+list: the engine itself is unchanged, and a rate question phrased without any of
+those words still reaches it and still gets a total. The real fix is
+mean-difference decomposition in the engine.
 
 **The code path is unverified by construction.** Its figures come from code the
 model wrote. The guards catch answers with no computation behind them; they
