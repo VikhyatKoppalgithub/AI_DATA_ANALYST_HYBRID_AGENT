@@ -11,4 +11,5 @@ __pycache__/
 venv/
 
 # Personal interview-prep study guide — kept local, not published.
-AI_Data_Analyst_Walkthrough.docx
+# Glob, not the exact name: a "_UPDATED" copy is otherwise not covered.
+AI_Data_Analyst_Walkthrough*.docx
