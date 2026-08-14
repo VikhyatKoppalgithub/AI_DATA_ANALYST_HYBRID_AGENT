@@ -1,0 +1,9 @@
+[server]
+headless = true
+# Re-run automatically when app.py is saved, instead of showing the
+# "Source file changed / Rerun" prompt. Imported modules under src/ are still
+# cached by Python, so edits there need a full restart.
+runOnSave = true
+
+[browser]
+gatherUsageStats = false

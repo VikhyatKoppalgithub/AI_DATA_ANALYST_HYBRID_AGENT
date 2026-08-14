@@ -1,0 +1,1513 @@
+[
+  {
+    "case": "march_drop",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 1,
+    "route": "change",
+    "passed": 14,
+    "total": 14,
+    "seconds": 18.29,
+    "output_tokens": 189,
+    "error": null,
+    "failures": [],
+    "narrative": "Laptop x West was the largest contributor, accounting for -11.08 percentage points of the -16.1% total change. This segment's own change was -36.7%, and it represented 30.2% of the starting total revenue. It is important to note that Docking Station x South, despite its massive -61.4% decline, explains only -0.66 percentage points of the total change because it was a small share of the overall revenue."
+  },
+  {
+    "case": "march_drop",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 2,
+    "route": "change",
+    "passed": 14,
+    "total": 14,
+    "seconds": 19.21,
+    "output_tokens": 197,
+    "error": null,
+    "failures": [],
+    "narrative": "Laptop x West was the largest contributor, accounting for -11.08 percentage points of the -16.1% total change. This segment's own change was -36.7%, and it represented 30.2% of the starting total. It is important to note that Docking Station x South moved -61.4% on its own, but this large percentage move explains only -0.66 pp of the -16.1% total because it was just 1.1% of revenue."
+  },
+  {
+    "case": "march_drop",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 3,
+    "route": "change",
+    "passed": 14,
+    "total": 14,
+    "seconds": 18.57,
+    "output_tokens": 189,
+    "error": null,
+    "failures": [],
+    "narrative": "Laptop x West was the largest contributor, accounting for -11.08 percentage points of the -16.1% total change. This segment's own change was -36.7%, and it represented 30.2% of the starting total. It is important to note that Docking Station x South, despite its large percentage move of -61.4%, explains only -0.66 pp of the total decline because it was just 1.1% of revenue."
+  },
+  {
+    "case": "march_drop_paraphrase",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 1,
+    "route": "change",
+    "passed": 6,
+    "total": 6,
+    "seconds": 25.72,
+    "output_tokens": 204,
+    "error": null,
+    "failures": [],
+    "narrative": "Laptop x West was the largest contributor, accounting for -11.08 percentage points of the -16.1% total change. This segment's own change was -36.7%, and it represented 30.2% of the starting total. It is important to note that Docking Station x South, despite its large percentage move of -61.4%, explains only -0.66 pp of the total decline because it was just 1.1% of revenue."
+  },
+  {
+    "case": "march_drop_paraphrase",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 2,
+    "route": "change",
+    "passed": 6,
+    "total": 6,
+    "seconds": 22.8,
+    "output_tokens": 211,
+    "error": null,
+    "failures": [],
+    "narrative": "Laptop x West was the largest contributor, accounting for -11.08 percentage points of the -16.1% total change. This segment's own change was -36.7%, and it was 30.2% of the starting total. The Docking Station x South moved -61.4% on its own, the largest percentage move in the data, but explains only -0.66 pp of the -16.1% total because it was just 1.1% of revenue."
+  },
+  {
+    "case": "march_drop_paraphrase",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 3,
+    "route": "change",
+    "passed": 6,
+    "total": 6,
+    "seconds": 27.05,
+    "output_tokens": 202,
+    "error": null,
+    "failures": [],
+    "narrative": "Laptop x West was the largest contributor, accounting for -11.08 percentage points of the -16.1% total change. This segment's own change was -36.7%, and it was 30.2% of the starting total. The Docking Station x South moved -61.4% on its own but explains only -0.66 pp of the -16.1% total because it was just 1.1% of revenue."
+  },
+  {
+    "case": "units_not_revenue",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 1,
+    "route": "change",
+    "passed": 5,
+    "total": 5,
+    "seconds": 34.93,
+    "output_tokens": 183,
+    "error": null,
+    "failures": [],
+    "narrative": "Retail x Laptop was the largest contributor, accounting for -3.36 points of the -8.6% total change. This segment's own change was -18.4%, and it was 18.3% of the starting total. The (missing) x Keyboard moved -38.5% on its own but explains only -0.29 pp of the -8.6% total because it was just 0.8% of revenue."
+  },
+  {
+    "case": "units_not_revenue",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 2,
+    "route": "change",
+    "passed": 5,
+    "total": 5,
+    "seconds": 31.42,
+    "output_tokens": 211,
+    "error": null,
+    "failures": [],
+    "narrative": "Retail x Laptop was the largest contributor, accounting for -3.36 points of the -8.6% total change. This segment's own change was -18.4%, and it was 18.3% of the starting total. The Direct channel contributed -2.87 percentage points, followed by Direct x Laptop at -2.46 points. It is important to note that (missing) x Keyboard, despite its large percentage move of -38.5%, explains only -0.29 pp of the total decline because it was just 0.8% of revenue."
+  },
+  {
+    "case": "units_not_revenue",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 3,
+    "route": "change",
+    "passed": 5,
+    "total": 5,
+    "seconds": 26.86,
+    "output_tokens": 184,
+    "error": null,
+    "failures": [],
+    "narrative": "Retail x Laptop was the largest contributor, accounting for -3.36 percentage points of the -8.6% total change. This segment's own change was -18.4%, and it was 18.3% of the starting total. The (missing) x Keyboard moved -38.5% on its own but explains only -0.29 pp of the -8.6% total because it was just 0.8% of revenue."
+  },
+  {
+    "case": "latest_period",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 1,
+    "route": "change",
+    "passed": 5,
+    "total": 5,
+    "seconds": 31.9,
+    "output_tokens": 190,
+    "error": null,
+    "failures": [],
+    "narrative": "Laptop x West was the largest contributor, accounting for +1.73 percentage points of the +4.3% total change. This segment's own change was +5.7%, and it was 30.2% of the starting total. The Laptop x South segment contributed +1.03 percentage points, while Laptop x East added +0.89 percentage points. It is important to note that the by-product slicing shows Laptop contributing +3.41 percentage points, which includes contributions from multiple regions and channels."
+  },
+  {
+    "case": "latest_period",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 2,
+    "route": "change",
+    "passed": 5,
+    "total": 5,
+    "seconds": 23.57,
+    "output_tokens": 190,
+    "error": null,
+    "failures": [],
+    "narrative": "Laptop x West was the largest contributor, accounting for +1.73 percentage points of the +4.3% total change. This segment's own change was +5.7%, and it was 30.2% of the starting total. The Laptop x South segment contributed +1.03 percentage points, while Laptop x East contributed +0.89 percentage points. It is important to note that the by-product slicing shows Laptop contributing +3.41 percentage points, which includes contributions from multiple regions and channels."
+  },
+  {
+    "case": "latest_period",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 3,
+    "route": "change",
+    "passed": 5,
+    "total": 5,
+    "seconds": 24.9,
+    "output_tokens": 199,
+    "error": null,
+    "failures": [],
+    "narrative": "Laptop x West was the largest contributor, accounting for 1.73 percentage points of the +4.3% total change. This segment's own change was +5.7%, and it represented 30.2% of the starting total revenue. The Laptop x South segment contributed an additional 1.03 percentage points to the overall growth, while Laptop x East added 0.89 percentage points. It is important to note that although these segments show significant contributions, they do not fully account for the total change due to their overlapping nature and varying starting proportions."
+  },
+  {
+    "case": "decoy_pressure",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 1,
+    "route": "change",
+    "passed": 7,
+    "total": 7,
+    "seconds": 31.44,
+    "output_tokens": 200,
+    "error": null,
+    "failures": [],
+    "narrative": "Laptop x West was the largest contributor, accounting for -11.08 percentage points of the -16.1% total change. This segment's own change was -36.7%, and it was 30.2% of the starting total. The Docking Station x South moved -61.4% on its own, the largest percentage move in the data, but explains only -0.66 pp of the -16.1% total because it was just 1.1% of revenue."
+  },
+  {
+    "case": "decoy_pressure",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 2,
+    "route": "change",
+    "passed": 7,
+    "total": 7,
+    "seconds": 25.08,
+    "output_tokens": 200,
+    "error": null,
+    "failures": [],
+    "narrative": "Laptop x West was the largest contributor, accounting for -11.08 percentage points of the -16.1% total change. This segment's own change was -36.7%, and it was 30.2% of the starting total. The Docking Station x South moved -61.4% on its own, the largest percentage move in the data, but explains only -0.66 pp of the -16.1% total because it was just 1.1% of revenue."
+  },
+  {
+    "case": "decoy_pressure",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 3,
+    "route": "change",
+    "passed": 7,
+    "total": 7,
+    "seconds": 24.6,
+    "output_tokens": 186,
+    "error": null,
+    "failures": [],
+    "narrative": "Laptop x West was the largest contributor, accounting for -11.08 percentage points of the -16.1% total change. This segment's own change was -36.7%, and it was 30.2% of the starting total. The Docking Station x South move, while impressive at -61.4%, explains only -0.66 pp of the total decline because it was just 1.1% of revenue."
+  },
+  {
+    "case": "channel_question",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 1,
+    "route": "change",
+    "passed": 5,
+    "total": 6,
+    "seconds": 29.74,
+    "output_tokens": 177,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "no invented numbers",
+        "detail": "invented [61.9] (not in the verified analysis)"
+      }
+    ],
+    "narrative": "Direct was the largest contributor, accounting for -8.33 points of the -16.1% total change. This segment's own change was -21.8%, and it was 38.1% of the starting total. The Retail channel contributed -7.36 percentage points, but its impact is smaller given that it accounted for only 61.9% of the starting total."
+  },
+  {
+    "case": "channel_question",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 2,
+    "route": "change",
+    "passed": 6,
+    "total": 6,
+    "seconds": 21.46,
+    "output_tokens": 174,
+    "error": null,
+    "failures": [],
+    "narrative": "Direct was the largest contributor, accounting for -8.33 points of the -16.1% total change. This segment's own change was -21.8%, and it was 38.1% of the starting total. The Retail channel contributed -7.36 percentage points, but its contribution is smaller in absolute terms because it represented a smaller share of the starting revenue."
+  },
+  {
+    "case": "channel_question",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 3,
+    "route": "change",
+    "passed": 6,
+    "total": 6,
+    "seconds": 21.34,
+    "output_tokens": 174,
+    "error": null,
+    "failures": [],
+    "narrative": "Direct was the largest contributor, accounting for -8.33 points of the -16.1% total change. This segment's own change was -21.8%, and it was 38.1% of the starting total. The Retail channel contributed -7.36 percentage points, but its contribution is misleading because it represents a smaller share of the starting revenue compared to Direct."
+  },
+  {
+    "case": "correlation",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 1,
+    "route": "code",
+    "passed": 7,
+    "total": 7,
+    "seconds": 109.93,
+    "output_tokens": 632,
+    "error": null,
+    "failures": [],
+    "narrative": "The correlation between units and unit_price is -0.0033. This indicates an extremely weak negative relationship, meaning that as the number of units sold increases, the unit price tends to decrease slightly, though the effect is negligible."
+  },
+  {
+    "case": "correlation",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 2,
+    "route": "code",
+    "passed": 7,
+    "total": 7,
+    "seconds": 53.78,
+    "output_tokens": 380,
+    "error": null,
+    "failures": [],
+    "narrative": "The correlation between units and unit_price is -0.0033. This indicates a very weak negative relationship; as the number of units sold increases, the unit price tends to decrease slightly, but the effect is minimal."
+  },
+  {
+    "case": "correlation",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 3,
+    "route": "code",
+    "passed": 7,
+    "total": 7,
+    "seconds": 19.05,
+    "output_tokens": 137,
+    "error": null,
+    "failures": [],
+    "narrative": "The correlation between units and unit_price is -0.0033. This indicates a very weak negative relationship, meaning that as the number of units sold increases, the unit price tends to decrease slightly, but the relationship is almost negligible."
+  },
+  {
+    "case": "top_sales_rep",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 1,
+    "route": "code",
+    "passed": 6,
+    "total": 6,
+    "seconds": 22.86,
+    "output_tokens": 175,
+    "error": null,
+    "failures": [],
+    "narrative": "The sales rep with the highest total revenue is `rep_34`, who generated $445,532.17 in revenue."
+  },
+  {
+    "case": "top_sales_rep",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 2,
+    "route": "code",
+    "passed": 6,
+    "total": 6,
+    "seconds": 21.8,
+    "output_tokens": 176,
+    "error": null,
+    "failures": [],
+    "narrative": "The sales rep with the highest total revenue is `rep_34`, who generated $445,532.17 in revenue."
+  },
+  {
+    "case": "top_sales_rep",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 3,
+    "route": "code",
+    "passed": 6,
+    "total": 6,
+    "seconds": 22.7,
+    "output_tokens": 182,
+    "error": null,
+    "failures": [],
+    "narrative": "The sales rep with the highest total revenue is `rep_34`, who generated $445,532.17 in revenue."
+  },
+  {
+    "case": "distinct_products",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 1,
+    "route": "code",
+    "passed": 4,
+    "total": 4,
+    "seconds": 10.48,
+    "output_tokens": 67,
+    "error": null,
+    "failures": [],
+    "narrative": "There are 4 distinct products in this dataset."
+  },
+  {
+    "case": "distinct_products",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 2,
+    "route": "code",
+    "passed": 4,
+    "total": 4,
+    "seconds": 9.78,
+    "output_tokens": 67,
+    "error": null,
+    "failures": [],
+    "narrative": "There are 4 distinct products in this dataset."
+  },
+  {
+    "case": "distinct_products",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 3,
+    "route": "code",
+    "passed": 4,
+    "total": 4,
+    "seconds": 9.7,
+    "output_tokens": 67,
+    "error": null,
+    "failures": [],
+    "narrative": "There are 4 distinct products in this dataset."
+  },
+  {
+    "case": "mean_units",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 1,
+    "route": "code",
+    "passed": 4,
+    "total": 4,
+    "seconds": 19.31,
+    "output_tokens": 136,
+    "error": null,
+    "failures": [],
+    "narrative": "The average number of units per order is 2.6961.\n\nThis figure was derived from the `units` column in the dataset, where the mean value is calculated to be approximately 2.6961."
+  },
+  {
+    "case": "mean_units",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 2,
+    "route": "code",
+    "passed": 4,
+    "total": 4,
+    "seconds": 18.85,
+    "output_tokens": 136,
+    "error": null,
+    "failures": [],
+    "narrative": "The average number of units per order is 2.6961.\n\nThis figure was derived from the `units` column in the dataset, where the mean value is calculated to be approximately 2.6961."
+  },
+  {
+    "case": "mean_units",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 3,
+    "route": "code",
+    "passed": 4,
+    "total": 4,
+    "seconds": 19.07,
+    "output_tokens": 136,
+    "error": null,
+    "failures": [],
+    "narrative": "The average number of units per order is 2.6961.\n\nThis figure was derived from the `units` column in the dataset, where the mean value is calculated to be approximately 2.6961."
+  },
+  {
+    "case": "support_breach_spike",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 1,
+    "route": "change",
+    "passed": 14,
+    "total": 14,
+    "seconds": 37.42,
+    "output_tokens": 220,
+    "error": null,
+    "failures": [],
+    "narrative": "P1 x Platform was the largest contributor, accounting for 44.13 points of the 48.4% decline in SLA breaches from February to March 2026. This segment's own change was +341.8%, significantly impacting the overall increase. However, it is important to note that P1 x Onboarding moved by +1100.0% on its own, which might seem substantial, but it only explains +2.58 points of the total decline because it represented just 0.2% of the starting revenue."
+  },
+  {
+    "case": "support_breach_spike",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 2,
+    "route": "change",
+    "passed": 14,
+    "total": 14,
+    "seconds": 26.4,
+    "output_tokens": 201,
+    "error": null,
+    "failures": [],
+    "narrative": "P1 x Platform was the largest contributor, accounting for 44.13 points of the +48.4% decline in SLA breaches. This segment's own change was +341.8%, significantly impacting the overall increase. It is important to note that despite P1 x Onboarding having the largest percentage move at +1100.0%, it explains only 2.58 points of the total change because it represents a small share of the starting figure."
+  },
+  {
+    "case": "support_breach_spike",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 3,
+    "route": "change",
+    "passed": 14,
+    "total": 14,
+    "seconds": 28.66,
+    "output_tokens": 216,
+    "error": null,
+    "failures": [],
+    "narrative": "P1 x Platform was the largest contributor, accounting for 44.13 points of the 48.4% decline in SLA breaches from February to March 2026. This segment's own change was +341.8%, significantly impacting the overall increase. However, it is important to note that while P1 x Onboarding had the largest percentage move at +1100.0%, it only accounted for +2.58 points of the total decline because it represented just 0.2% of the starting revenue."
+  },
+  {
+    "case": "support_decoy_pressure",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 1,
+    "route": "change",
+    "passed": 6,
+    "total": 6,
+    "seconds": 35.39,
+    "output_tokens": 201,
+    "error": null,
+    "failures": [],
+    "narrative": "P1 x Platform was the largest contributor, accounting for 44.13 points of the 48.4% increase in SLA breaches. This segment's own change was a substantial 341.8%, significantly impacting the overall rise. However, it is important to note that P1 x Onboarding, despite its massive percentage move of +1100.0%, only accounted for +2.58 points of the total increase because it represented just 0.2% of the starting figure."
+  },
+  {
+    "case": "support_decoy_pressure",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 2,
+    "route": "change",
+    "passed": 6,
+    "total": 6,
+    "seconds": 27.12,
+    "output_tokens": 201,
+    "error": null,
+    "failures": [],
+    "narrative": "P1 x Platform was the largest contributor, accounting for 44.13 points of the 48.4% rise in SLA breaches. This segment's own change was a substantial +341.8%, significantly impacting the overall increase. However, it is important to note that P1 x Onboarding, despite its massive percentage move of +1100.0%, only accounted for +2.58 points of the total change because it represented just 0.2% of the starting total."
+  },
+  {
+    "case": "support_decoy_pressure",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 3,
+    "route": "change",
+    "passed": 6,
+    "total": 6,
+    "seconds": 29.52,
+    "output_tokens": 215,
+    "error": null,
+    "failures": [],
+    "narrative": "P1 x Platform was the largest contributor, accounting for 44.13 points of the +48.4% total change in SLA breaches from February to March 2026. This segment's own change was +341.8%, significantly higher than its share of the starting total at 12.9%. It is important to note that while P1 x Onboarding had the largest percentage move at +1100.0%, it only accounted for +2.58 points of the total change because it represented a small portion of the overall revenue."
+  },
+  {
+    "case": "support_metric_trap",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 1,
+    "route": "change",
+    "passed": 5,
+    "total": 5,
+    "seconds": 31.9,
+    "output_tokens": 188,
+    "error": null,
+    "failures": [],
+    "narrative": "Platform x chat (team x channel) was the largest contributor, accounting for -0.91 percentage points of the -1.3% total change. This segment's own change was -6.8%, and it represented 13.3% of the starting total. The Platform x email segment also contributed significantly with -0.81 percentage points, but its impact is less pronounced when considering its smaller share of the starting figure."
+  },
+  {
+    "case": "support_metric_trap",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 2,
+    "route": "change",
+    "passed": 5,
+    "total": 5,
+    "seconds": 27.22,
+    "output_tokens": 196,
+    "error": null,
+    "failures": [],
+    "narrative": "Platform x chat (team x channel) was the largest contributor, accounting for -0.91 percentage points of the -1.3% total change. This segment's own change was -6.8%, and it represented 13.3% of the starting total. The alternative slicing by team shows that Platform contributed -2.04 percentage points, which is larger than the contribution from Platform x chat alone, indicating that other teams also had significant impacts on the decline."
+  },
+  {
+    "case": "support_metric_trap",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 3,
+    "route": "change",
+    "passed": 5,
+    "total": 5,
+    "seconds": 27.7,
+    "output_tokens": 198,
+    "error": null,
+    "failures": [],
+    "narrative": "Platform x chat (team x channel) was the largest contributor, accounting for -0.91 percentage points of the -1.3% total change. This segment's own change was -6.8%, and it represented 13.3% of the starting total. The MISLEADING section shows that by team, Platform contributed -2.04 pp, which may seem large but does not explain much of the overall decline because it is a smaller share of the starting figure."
+  },
+  {
+    "case": "support_median_resolution",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 1,
+    "route": "code",
+    "passed": 5,
+    "total": 5,
+    "seconds": 24.19,
+    "output_tokens": 145,
+    "error": null,
+    "failures": [],
+    "narrative": "The median resolution time across all tickets is 25.18 hours.\n\nThis figure was derived from the `resolution_hours` column in the dataset, where the median value is calculated to be 25.18 hours."
+  },
+  {
+    "case": "support_median_resolution",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 2,
+    "route": "code",
+    "passed": 5,
+    "total": 5,
+    "seconds": 22.4,
+    "output_tokens": 145,
+    "error": null,
+    "failures": [],
+    "narrative": "The median resolution time across all tickets is 25.18 hours.\n\nThis figure was derived from the `resolution_hours` column in the dataset, where the median value is calculated to be 25.18 hours."
+  },
+  {
+    "case": "support_median_resolution",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 3,
+    "route": "code",
+    "passed": 5,
+    "total": 5,
+    "seconds": 22.42,
+    "output_tokens": 145,
+    "error": null,
+    "failures": [],
+    "narrative": "The median resolution time across all tickets is 25.18 hours.\n\nThis figure was derived from the `resolution_hours` column in the dataset, where the median value is calculated to be 25.18 hours."
+  },
+  {
+    "case": "support_open_tickets",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 1,
+    "route": "code",
+    "passed": 3,
+    "total": 4,
+    "seconds": 20.23,
+    "output_tokens": 131,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "no invented numbers",
+        "detail": "invented [6.04] (not in executed output)"
+      }
+    ],
+    "narrative": "There are 2,210 tickets that are still open, meaning they have no `closed_at` value. This represents approximately 6.04% of the total tickets in the dataset."
+  },
+  {
+    "case": "support_open_tickets",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 2,
+    "route": "code",
+    "passed": 3,
+    "total": 4,
+    "seconds": 29.21,
+    "output_tokens": 199,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "no invented numbers",
+        "detail": "invented [6.04, 36617.0] (not in executed output)"
+      }
+    ],
+    "narrative": "There are 2,210 tickets that have no closed_at value, meaning they are still open. This is based on the count of null values in the `closed_at` column.\n\nTo summarize:\n- Total tickets: 36,617\n- Open tickets (null `closed_at`): 2,210\n\nThis indicates that approximately 6.04% of the tickets are still open."
+  },
+  {
+    "case": "support_open_tickets",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 3,
+    "route": "code",
+    "passed": 3,
+    "total": 4,
+    "seconds": 30.11,
+    "output_tokens": 204,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "no invented numbers",
+        "detail": "invented [10930.0, 36617.0] (not in executed output)"
+      }
+    ],
+    "narrative": "It seems there was a misunderstanding in the previous response. The number of tickets that are still open, meaning they have no `closed_at` value, is 10,930.\n\nTo summarize:\n- There are 36,617 total tickets.\n- Out of these, 2210 tickets have a null value for `closed_at`, indicating they are still open.\n\nTherefore, the number of open tickets is 10,930."
+  },
+  {
+    "case": "support_reopened_count",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 1,
+    "route": "code",
+    "passed": 3,
+    "total": 4,
+    "seconds": 24.1,
+    "output_tokens": 152,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "no invented numbers",
+        "detail": "invented [7.35, 100.0, 36617.0] (not in executed output)"
+      }
+    ],
+    "narrative": "There were 2,688 tickets that were reopened. This represents a significant portion of the total tickets, as it accounts for approximately 7.35% of all support tickets (2,688 / 36,617 * 100)."
+  },
+  {
+    "case": "support_reopened_count",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 2,
+    "route": "code",
+    "passed": 3,
+    "total": 4,
+    "seconds": 24.32,
+    "output_tokens": 161,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "no invented numbers",
+        "detail": "invented [7.35, 100.0, 36617.0] (not in executed output)"
+      }
+    ],
+    "narrative": "There were 2,688 tickets that were reopened. This represents a significant portion of the total tickets, as it accounts for approximately 7.35% of all support tickets (2,688 / 36,617 * 100)."
+  },
+  {
+    "case": "support_reopened_count",
+    "model": "qwen2.5-coder:14b",
+    "attempt": 3,
+    "route": "code",
+    "passed": 3,
+    "total": 4,
+    "seconds": 24.61,
+    "output_tokens": 161,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "no invented numbers",
+        "detail": "invented [7.35, 100.0, 36617.0] (not in executed output)"
+      }
+    ],
+    "narrative": "There were 2,688 tickets that were reopened. This represents a significant portion of the total tickets, as it accounts for approximately 7.35% of all support tickets (2,688 / 36,617 * 100)."
+  },
+  {
+    "case": "march_drop",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 1,
+    "route": "change",
+    "passed": 13,
+    "total": 14,
+    "seconds": 8.73,
+    "output_tokens": 267,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "no invented numbers",
+        "detail": "invented [4.9] (not in the verified analysis)"
+      }
+    ],
+    "narrative": "Laptop x West contributed -11.08 percentage points of the -16.1% total change, accounting for 4.9% of the decline.\n\nSupporting facts:\n- Laptop x East's own change was -36.7%, and it was 30.2% of the starting total.\n- Laptop x South's own change was -0.98 pp (own change -8.3%).\n\nThe MISLEADING statement is misleading because it suggests that Docking Station x South moved \"the largest percentage move in the data, but explains only -0.66 pp of the -16.1% total\" due to its small share of revenue. This is not accurate; the statement implies that Docking Station x South's large percentage move (61.4%) explains a significant portion of the decline, which is incorrect."
+  },
+  {
+    "case": "march_drop",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 2,
+    "route": "change",
+    "passed": 13,
+    "total": 14,
+    "seconds": 5.47,
+    "output_tokens": 253,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "no invented numbers",
+        "detail": "invented [4.5, 21.9] (not in the verified analysis)"
+      }
+    ],
+    "narrative": "Laptop x West contributed -11.08 percentage points of the -16.1% total change, accounting for 4.5% of the decline.\n\nSupporting facts:\n- Laptop x West's own change was -36.7%, which is 21.9% of its starting total.\n- The segment's own change was -36.7%, and it was 30.2% of the starting total, but this does not explain the overall decline.\n\nMISLEADING:\nThe Docking Station x South moved -61.4% on its own, which is the largest percentage move in the data, but explains only -0.66 pp of the -16.1% total because it was just 1.1% of revenue."
+  },
+  {
+    "case": "march_drop",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 3,
+    "route": "change",
+    "passed": 13,
+    "total": 14,
+    "seconds": 4.4,
+    "output_tokens": 205,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "no invented numbers",
+        "detail": "invented [4.5] (not in the verified analysis)"
+      }
+    ],
+    "narrative": "Laptop x West contributed -11.08 percentage points of the -16.1% total change, accounting for 4.5% of the decline.\n\nSupporting facts:\n- Laptop x East's own change was -36.7%, and it was 30.2% of the starting total.\n- Laptop x South's own change was -0.98 pp (own change -8.3%).\n\nThe alternative slicings do not explain much of the total decline, as they account for only a small percentage of the starting figure."
+  },
+  {
+    "case": "march_drop_paraphrase",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 1,
+    "route": "change",
+    "passed": 5,
+    "total": 6,
+    "seconds": 5.45,
+    "output_tokens": 222,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "no invented numbers",
+        "detail": "invented [0.4, 4.5, 12.9] (not in the verified analysis)"
+      }
+    ],
+    "narrative": "Laptop x West contributed -11.08 percentage points of the -16.1% total change, accounting for 4.5% of the decline.\n\nSupporting facts:\n- Laptop x East's own change was -36.7%, which is 12.9% of the starting total.\n- Laptop x South's own change was -0.98 pp, which is 0.4% of the starting total.\n\nThe alternative slicings do not explain much of the total decline because they are small shares of revenue and have overlapping figures with THE ANSWER above."
+  },
+  {
+    "case": "march_drop_paraphrase",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 2,
+    "route": "change",
+    "passed": 5,
+    "total": 6,
+    "seconds": 4.38,
+    "output_tokens": 189,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "no invented numbers",
+        "detail": "invented [4.5] (not in the verified analysis)"
+      }
+    ],
+    "narrative": "Laptop x West contributed -11.08 percentage points of the -16.1% total change, accounting for 4.5% of the decline.\n\nSupporting facts:\n- Laptop x West's own change was -36.7%, and it was 30.2% of the starting total.\n- This segment explains a significant portion of the revenue decline due to its substantial impact on the company's financial performance."
+  },
+  {
+    "case": "march_drop_paraphrase",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 3,
+    "route": "change",
+    "passed": 5,
+    "total": 6,
+    "seconds": 5.09,
+    "output_tokens": 237,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "no invented numbers",
+        "detail": "invented [4.5, 20.9] (not in the verified analysis)"
+      }
+    ],
+    "narrative": "Laptop x West contributed -11.08 percentage points of the -16.1% total change, accounting for 4.5% of the decline.\n\nSupporting facts:\n- Laptop x West's own change was -36.7%, which is 20.9% of its starting revenue.\n- This segment's own change was -36.7%, and it was 30.2% of the starting total, indicating that it explains a significant portion of the decline.\n\nThe MISLEADING section does not explain why Laptop x West moved so much more than other segments. It only states that this is not the story, which is inaccurate."
+  },
+  {
+    "case": "units_not_revenue",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 1,
+    "route": "change",
+    "passed": 5,
+    "total": 5,
+    "seconds": 4.65,
+    "output_tokens": 185,
+    "error": null,
+    "failures": [],
+    "narrative": "Laptop x West contributed -4.34 percentage points of the -8.6% total change, accounting for 11.9% of the starting total.\n\nSupporting facts:\n- Docking Station x South had a smaller own change (-1.78 pp) but was still part of the decline.\n- Laptop x East had a smaller own change (-1.25 pp) but was also part of the decline."
+  },
+  {
+    "case": "units_not_revenue",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 2,
+    "route": "change",
+    "passed": 5,
+    "total": 5,
+    "seconds": 4.32,
+    "output_tokens": 198,
+    "error": null,
+    "failures": [],
+    "narrative": "Laptop x West contributed -4.34 percentage points of the -8.6% total change, this segment's own change was -36.6%, and it was 11.9% of the starting total.\n\nSupporting facts:\n- The laptop sold in West decreased by 4.26 percentage points.\n- The laptop sold in East decreased by 1.25 percentage points.\n- The Docking Station sold in South decreased by 1.78 percentage points."
+  },
+  {
+    "case": "units_not_revenue",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 3,
+    "route": "change",
+    "passed": 5,
+    "total": 5,
+    "seconds": 4.82,
+    "output_tokens": 224,
+    "error": null,
+    "failures": [],
+    "narrative": "The largest contributor to the decline in units sold from February to March 2026 was the Laptop x West product, which contributed -4.34 percentage points of the total change, accounting for a decrease of -8.6%.\n\nSupporting facts:\n- The Docking Station x South segment had an own change of -1.78 percentage points.\n- The Laptop x East segment had an own change of -1.25 percentage points.\n\nThese alternative slicings do not add up to the total decline because they overlap with the THE ANSWER provided, which identifies the Laptop x West product as the largest contributor."
+  },
+  {
+    "case": "latest_period",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 1,
+    "route": "change",
+    "passed": 4,
+    "total": 5,
+    "seconds": 6.32,
+    "output_tokens": 267,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "no invented numbers",
+        "detail": "invented [0.24, 0.4, 0.67, 2.83] (not in the verified analysis)"
+      }
+    ],
+    "narrative": "Laptop x West contributed +1.73 percentage points of the +4.3% total change, accounting for 1.73/4.3 = 0.40 of the decline.\n\nSupporting facts:\n- Laptop x West's own change was +5.7%, which is 2.83/4.3 = 0.67 of the total.\n- Laptop x East's own change was +0.89%, which is 1.02/4.3 = 0.24 of the total.\n\nThe alternative slicings do not explain much of the total decline because they account for only a small portion (0.40, 0.67, and 0.24) of the starting revenue figure."
+  },
+  {
+    "case": "latest_period",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 2,
+    "route": "change",
+    "passed": 4,
+    "total": 5,
+    "seconds": 7.62,
+    "output_tokens": 357,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "no invented numbers",
+        "detail": "invented [2.8, 4.8, 6.2, 8.5] (not in the verified analysis)"
+      }
+    ],
+    "narrative": "Laptop x West contributed +1.73 percentage points of the +4.3% total change, accounting for 1.73 out of every 4.3% of the revenue decline.\n\nSupporting facts:\n- Laptop x West's own change was +5.7%, which is 2.8% more than its own share of the starting total.\n- The segment's own change was 30.2% of the starting total, but it contributed only 1.73 out of every 4.3% of the revenue decline.\n\nAlternative slicings:\n- By product: Laptop increased by 3.41 percentage points, which is 8.5% more than its own share of the starting total.\n- By region: West's revenue decreased by 2.17 percentage points, which is 6.2% less than its own share of the starting total.\n- By region: South's revenue decreased by 1.53 percentage points, which is 4.8% less than its own share of the starting total.\n\nThese alternative slicings do not explain much of the total revenue decline because they are all small segments that contribute only a small portion of the overall change."
+  },
+  {
+    "case": "latest_period",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 3,
+    "route": "change",
+    "passed": 5,
+    "total": 5,
+    "seconds": 4.11,
+    "output_tokens": 187,
+    "error": null,
+    "failures": [],
+    "narrative": "Laptop x West contributed +1.73 percentage points of the +4.3% total change, accounting for 1.73% of the decline.\n\nSupporting facts:\n- Laptop x West's own change was +5.7%, and it was 30.2% of the starting total.\n- The other segments' changes were relatively small compared to Laptop x West's contribution."
+  },
+  {
+    "case": "decoy_pressure",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 1,
+    "route": "change",
+    "passed": 7,
+    "total": 7,
+    "seconds": 7.12,
+    "output_tokens": 298,
+    "error": null,
+    "failures": [],
+    "narrative": "Laptop x West had the biggest percentage collapse in March 2026, contributing -11.08 percentage points of the -16.1% total change. This segment's own change was -36.7%, and it was 30.2% of the starting total.\n\nSupporting facts:\n- Laptop x West's own decline was -36.7%, which is 30.2% of the starting revenue.\n- The segment's own percentage point (pp) contribution to the total change was -11.08, which represents a significant portion of the overall decline.\n\nThe MISLEADING section mentions that Docking Station x South had the largest percentage move on its own, but it explains only -0.66 pp of the -16.1% total because it was just 1.1% of revenue. This suggests that while the segment's own movement is substantial, it does not account for a significant portion of the overall decline in revenue."
+  },
+  {
+    "case": "decoy_pressure",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 2,
+    "route": "change",
+    "passed": 7,
+    "total": 7,
+    "seconds": 6.8,
+    "output_tokens": 321,
+    "error": null,
+    "failures": [],
+    "narrative": "Laptop x West had the biggest percentage collapse in March 2026, accounting for -11.08 percentage points of the -16.1% total change. This segment's own change was -36.7%, and it was 30.2% of the starting total.\n\nSupporting facts:\n- Laptop x West had a direct impact on the decline, with a -11.08 percentage point contribution.\n- The laptop itself contributed -36.7% to the overall decline, which is 30.2% of the initial revenue figure.\n- This segment's own change explains only -0.66 pp of the total decline, indicating that it was not a significant driver of the overall trend.\n\nThe MISLEADING section warns that this segment's large percentage move (11.08%) does not explain much of the total decline (-16.1%). The Docking Station x South moved -61.4% on its own, but explains only -0.66 pp of the total because it was just 1.1% of revenue."
+  },
+  {
+    "case": "decoy_pressure",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 3,
+    "route": "change",
+    "passed": 7,
+    "total": 7,
+    "seconds": 5.92,
+    "output_tokens": 274,
+    "error": null,
+    "failures": [],
+    "narrative": "Laptop x West had the biggest percentage collapse in March 2026, accounting for -11.08 percentage points of the -16.1% total change.\n\nSupporting facts:\n- Laptop x West's own change was -36.7%, which is 30.2% of the starting total.\n- The segment's own change was -36.7%, and it was 30.2% of the starting total.\n- The segment's own change was -36.7%, and it was 30.2% of the starting total.\n\nThe MISLEADING section warns that this is not the story because Docking Station x South moved -61.4% on its own, which explains only -0.66 pp of the -16.1% total because it was just 1.1% of revenue."
+  },
+  {
+    "case": "channel_question",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 1,
+    "route": "change",
+    "passed": 6,
+    "total": 6,
+    "seconds": 5.08,
+    "output_tokens": 212,
+    "error": null,
+    "failures": [],
+    "narrative": "The Direct channel drove more of the March 2026 revenue decline, accounting for 8.33 percentage points of the total change, which was a decrease of -16.1%.\n\nSupporting facts:\n- The Direct channel contributed -8.33 percentage points to the overall decline.\n- This segment's own change was -21.8%, and it was 38.1% of the starting total.\n\nThe alternative slicings do not explain much of the total revenue decline because they are small shares of the starting figure, and saying so is accurate."
+  },
+  {
+    "case": "channel_question",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 2,
+    "route": "change",
+    "passed": 6,
+    "total": 6,
+    "seconds": 4.92,
+    "output_tokens": 226,
+    "error": null,
+    "failures": [],
+    "narrative": "The Direct channel drove more of the March 2026 revenue decline, accounting for -8.33 percentage points of the -16.1% total change.\n\nSupport:\n- The Direct channel contributed -8.33 percentage points to the overall decline.\n- This segment's own change was -21.8%, which is 38.1% of the starting total revenue.\n- The alternative slicings (by channel) show that the Direct channel had a smaller contribution (-7.36 pp), but it still accounted for a significant portion of the decline overall.\n\nThe MISLEADING section is not present in this analysis."
+  },
+  {
+    "case": "channel_question",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 3,
+    "route": "change",
+    "passed": 6,
+    "total": 6,
+    "seconds": 5.46,
+    "output_tokens": 257,
+    "error": null,
+    "failures": [],
+    "narrative": "The Direct channel drove more of the March 2026 revenue decline, accounting for 8.33 percentage points of the -16.1% total change.\n\nSupporting facts:\n- The Direct channel contributed -8.33 percentage points to the decline.\n- This segment's own change was -21.8%, which is 38.1% of the starting total revenue.\n- The alternative slicings do not add up to the same total change as THE ANSWER, indicating that these segments overlap with the Direct channel contribution.\n\nMISLEADING section:\nThe misleading segment (by channel: Retail -7.36 pp) explains very little of the total decline because it is a small share of the starting figure and does not contribute significantly to the overall revenue decrease."
+  },
+  {
+    "case": "correlation",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 1,
+    "route": "code",
+    "passed": 7,
+    "total": 7,
+    "seconds": 7.18,
+    "output_tokens": 157,
+    "error": null,
+    "failures": [],
+    "narrative": "The correlation between `units` and `unit_price` is -0.0033. This indicates a weak negative relationship between the two variables. The higher the number of units sold, the lower the average price per unit."
+  },
+  {
+    "case": "correlation",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 2,
+    "route": "code",
+    "passed": 7,
+    "total": 7,
+    "seconds": 3.63,
+    "output_tokens": 136,
+    "error": null,
+    "failures": [],
+    "narrative": "The correlation between `units` and `unit_price` is -0.0033. This indicates a very weak negative relationship where higher prices are associated with fewer units sold."
+  },
+  {
+    "case": "correlation",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 3,
+    "route": "code",
+    "passed": 7,
+    "total": 7,
+    "seconds": 3.36,
+    "output_tokens": 136,
+    "error": null,
+    "failures": [],
+    "narrative": "The correlation between `units` and `unit_price` is -0.0033. This indicates a very weak negative relationship where higher prices are associated with fewer units sold."
+  },
+  {
+    "case": "top_sales_rep",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 1,
+    "route": "change",
+    "passed": 1,
+    "total": 6,
+    "seconds": 4.22,
+    "output_tokens": 166,
+    "error": null,
+    "failures": [
+      {
+        "family": "routing",
+        "name": "routed to code",
+        "detail": "routed to 'change'"
+      },
+      {
+        "family": "correctness",
+        "name": "ran at least 1 successful code block(s)",
+        "detail": "routed to 'change', so no code was generated"
+      },
+      {
+        "family": "correctness",
+        "name": "reports the value 445532.17",
+        "detail": "found [1.5, 1.58, 2.0, 4.0, 4.3, 5.0], expected ~445532.17"
+      },
+      {
+        "family": "correctness",
+        "name": "at most 2 repair(s)",
+        "detail": "routed to 'change', so no code was generated"
+      },
+      {
+        "family": "communication",
+        "name": "narrative mentions rep_34",
+        "detail": "missing ['rep_34']"
+      }
+    ],
+    "narrative": "The single largest contributor to the total revenue decline from 2026-04 to 2026-05 was rep_02, contributing +1.58 percentage points of the +4.3% total change.\n\nThis segment's own change was +103.5%, and it accounted for 1.5% of the starting total revenue of $2,844,196.83."
+  },
+  {
+    "case": "top_sales_rep",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 2,
+    "route": "change",
+    "passed": 1,
+    "total": 6,
+    "seconds": 4.86,
+    "output_tokens": 223,
+    "error": null,
+    "failures": [
+      {
+        "family": "routing",
+        "name": "routed to code",
+        "detail": "routed to 'change'"
+      },
+      {
+        "family": "correctness",
+        "name": "ran at least 1 successful code block(s)",
+        "detail": "routed to 'change', so no code was generated"
+      },
+      {
+        "family": "correctness",
+        "name": "reports the value 445532.17",
+        "detail": "found [1.5, 1.58, 2.0, 4.0, 5.0, 103.5], expected ~445532.17"
+      },
+      {
+        "family": "correctness",
+        "name": "at most 2 repair(s)",
+        "detail": "routed to 'change', so no code was generated"
+      },
+      {
+        "family": "communication",
+        "name": "narrative mentions rep_34",
+        "detail": "missing ['rep_34']"
+      }
+    ],
+    "narrative": "The sales rep who had the highest total revenue, rep_02, accounted for a 1.58 percentage point increase in revenue between 2026-04 and 2026-05. This segment's own change was +103.5%, and it was 1.5% of the starting total.\n\nThe decline in revenue from 2,844,196.83 to 2,965,766.61 between these two months was driven by rep_02's sales performance, which contributed significantly to the overall increase. The other sales reps' contributions were relatively minor compared to rep_02's impact on the total revenue."
+  },
+  {
+    "case": "top_sales_rep",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 3,
+    "route": "change",
+    "passed": 1,
+    "total": 6,
+    "seconds": 5.3,
+    "output_tokens": 247,
+    "error": null,
+    "failures": [
+      {
+        "family": "routing",
+        "name": "routed to code",
+        "detail": "routed to 'change'"
+      },
+      {
+        "family": "correctness",
+        "name": "ran at least 1 successful code block(s)",
+        "detail": "routed to 'change', so no code was generated"
+      },
+      {
+        "family": "correctness",
+        "name": "reports the value 445532.17",
+        "detail": "found [1.5, 1.58, 2.0, 4.0, 4.3, 5.0], expected ~445532.17"
+      },
+      {
+        "family": "correctness",
+        "name": "at most 2 repair(s)",
+        "detail": "routed to 'change', so no code was generated"
+      },
+      {
+        "family": "communication",
+        "name": "narrative mentions rep_34",
+        "detail": "missing ['rep_34']"
+      }
+    ],
+    "narrative": "The sales rep who had the highest total revenue was rep_02, contributing +1.58 percentage points of the +4.3% total change. This segment's own change was +103.5%, and it was 1.5% of the starting total.\n\nSupport drawn only from the supporting facts:\nThe decline in revenue between 2026-04 and 2026-05 was due to a combination of factors, including changes in sales performance by different sales reps. The largest contributor to this decline was rep_02, who had a significant positive impact on the overall revenue trend.\n\nThe alternative slicings provided do not add up to the total change and are not separate contributors. Each row re-describes the same decline from a different angle, so the figures overlap with THE ANSWER above."
+  },
+  {
+    "case": "distinct_products",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 1,
+    "route": "code",
+    "passed": 4,
+    "total": 4,
+    "seconds": 2.52,
+    "output_tokens": 92,
+    "error": null,
+    "failures": [],
+    "narrative": "There are 4 distinct products in this dataset.\n\nThe number of unique products is printed as `4`."
+  },
+  {
+    "case": "distinct_products",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 2,
+    "route": "code",
+    "passed": 4,
+    "total": 4,
+    "seconds": 1.98,
+    "output_tokens": 70,
+    "error": null,
+    "failures": [],
+    "narrative": "There are 4 distinct products in this dataset."
+  },
+  {
+    "case": "distinct_products",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 3,
+    "route": "code",
+    "passed": 4,
+    "total": 4,
+    "seconds": 1.97,
+    "output_tokens": 70,
+    "error": null,
+    "failures": [],
+    "narrative": "There are 4 distinct products in this dataset."
+  },
+  {
+    "case": "mean_units",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 1,
+    "route": "code",
+    "passed": 3,
+    "total": 4,
+    "seconds": 4.26,
+    "output_tokens": 178,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "no invented numbers",
+        "detail": "invented [9408.0] (not in executed output)"
+      }
+    ],
+    "narrative": "The average number of units per order is 2.6961.\n\nTo compute this:\n- We sum up all the values in the 'units' column.\n- We divide by the total count of rows (9,408).\n\nThis gives us the average number of units per order."
+  },
+  {
+    "case": "mean_units",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 2,
+    "route": "code",
+    "passed": 4,
+    "total": 4,
+    "seconds": 2.39,
+    "output_tokens": 88,
+    "error": null,
+    "failures": [],
+    "narrative": "The average number of units per order is 2.6961."
+  },
+  {
+    "case": "mean_units",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 3,
+    "route": "code",
+    "passed": 4,
+    "total": 4,
+    "seconds": 2.31,
+    "output_tokens": 88,
+    "error": null,
+    "failures": [],
+    "narrative": "The average number of units per order is 2.6961."
+  },
+  {
+    "case": "support_breach_spike",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 1,
+    "route": "change",
+    "passed": 12,
+    "total": 14,
+    "seconds": 6.39,
+    "output_tokens": 252,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "leads with Platform",
+        "detail": "first sentence: 'SLA breaches went up by 341'"
+      },
+      {
+        "family": "communication",
+        "name": "no causal claim about the metric",
+        "detail": "found 'change due to'"
+      }
+    ],
+    "narrative": "SLA breaches went up by 341.8% due to P1 x Platform (priority x team), contributing an additional 44.13 percentage points to the overall decline.\n\nSupporting facts:\n- P1 x Platform's own change was +341.8%, making it the largest contributor.\n- This segment's own change was 12.9% of the starting total, indicating that it accounted for a significant portion of the decline.\n\nThe MISLEADING section warns that this is not the story, as P1 x Onboarding moved by only +1100.0%, which explains only +2.58 pp of the total change due to its small share of revenue."
+  },
+  {
+    "case": "support_breach_spike",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 2,
+    "route": "change",
+    "passed": 13,
+    "total": 14,
+    "seconds": 6.01,
+    "output_tokens": 277,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "leads with Platform",
+        "detail": "first sentence: 'SLA breaches went up by 341'"
+      }
+    ],
+    "narrative": "SLA breaches went up by 341.8% due to P1 x Platform (priority x team), which contributed an additional 44.13 percentage points to the overall decline.\n\nSupporting facts:\n- P1 x Platform's own change was +341.8%, and it was 12.9% of the starting total.\n- The segment's own change explains only +2.58 pp of the +48.4% total because it was just 0.2% of revenue.\n\nThe MISLEADING section warns that this is not the story, as P1 x Onboarding moved +1100.0% on its own, but explains only +2.58 pp of the +48.4% total because it was just 0.2% of revenue."
+  },
+  {
+    "case": "support_breach_spike",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 3,
+    "route": "change",
+    "passed": 13,
+    "total": 14,
+    "seconds": 5.14,
+    "output_tokens": 237,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "leads with Platform",
+        "detail": "first sentence: 'SLA breaches went up by +341'"
+      }
+    ],
+    "narrative": "SLA breaches went up by +341.8%, accounting for 44.13 percentage points of the +48.4% total change between March 2026 and February 2026.\n\nSupporting facts:\n- P1 x Platform contributed +341.8% of the +48.4% total change.\n- P1 x Onboarding contributed +2.58 pp (own change +1100.0%).\n\nThe MISLEADING section warns that this segment's large percentage move explains very little of the total, as it was just 0.2% of revenue."
+  },
+  {
+    "case": "support_decoy_pressure",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 1,
+    "route": "change",
+    "passed": 6,
+    "total": 6,
+    "seconds": 6.87,
+    "output_tokens": 270,
+    "error": null,
+    "failures": [],
+    "narrative": "P1 x Platform had the sharpest percentage rise in SLA breaches in March 2026, contributing +44.13 percentage points of the +48.4% total change.\n\nSupporting facts:\n- P1 x Platform's own change was +341.8%, and it was 12.9% of the starting total.\n- The segment's own change explains only +2.58 pp of the +48.4% total, which is a small share of revenue.\n\nThe MISLEADING section warns that this is not the story because P1 x Onboarding moved +1100.0% on its own, but it explains only +2.58 pp of the +48.4% total because it was just 0.2% of revenue."
+  },
+  {
+    "case": "support_decoy_pressure",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 2,
+    "route": "change",
+    "passed": 6,
+    "total": 6,
+    "seconds": 6.14,
+    "output_tokens": 282,
+    "error": null,
+    "failures": [],
+    "narrative": "P1 x Platform had the sharpest percentage rise in SLA breaches in March 2026, contributing +44.13 percentage points of the +48.4% total change.\n\nSupporting facts:\n- P1 x Platform's own change was +341.8%, and it was 12.9% of the starting total.\n- The segment's own change was +341.8%, which explains only +2.58 pp of the +48.4% total because it was just 0.2% of revenue.\n\nThe MISLEADING section warns that this is not the story, as P1 x Onboarding moved +1100.0% on its own, but explains only +2.58 pp of the +48.4% total because it was just 0.2% of revenue."
+  },
+  {
+    "case": "support_decoy_pressure",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 3,
+    "route": "change",
+    "passed": 6,
+    "total": 6,
+    "seconds": 4.78,
+    "output_tokens": 217,
+    "error": null,
+    "failures": [],
+    "narrative": "P1 x Platform had the sharpest percentage rise in SLA breaches in March 2026, contributing an additional 44.13 percentage points to the overall decline from 426.00 to 632.00 between 2026-02 and 2026-03.\n\nThe segment's own change was +341.8%, which is 12.9% of the starting total, indicating that this team's specific actions had a significant impact on the overall SLA breach rate."
+  },
+  {
+    "case": "support_metric_trap",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 1,
+    "route": "change",
+    "passed": 5,
+    "total": 5,
+    "seconds": 5.38,
+    "output_tokens": 217,
+    "error": null,
+    "failures": [],
+    "narrative": "Platform x chat (team x channel) contributed -0.91 percentage points of the -1.3% total change, accounting for 6.8% of the starting total.\n\nSupporting facts:\n- Onboarding x chat: -0.81 pp (own change -10.7%)\n- Platform x email: -0.81 pp (own change -4.4%)\n\nThe alternative slicings do not explain much of the total decline, as they are small shares of the starting figure and overlap with the main contributor."
+  },
+  {
+    "case": "support_metric_trap",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 2,
+    "route": "change",
+    "passed": 5,
+    "total": 5,
+    "seconds": 5.58,
+    "output_tokens": 251,
+    "error": null,
+    "failures": [],
+    "narrative": "Platform x chat contributed -0.91 percentage points of the -1.3% total change, accounting for 13.3% of the starting total.\n\nSupporting facts:\n- Platform x chat's own change was -6.8%, which is 13.3% of the starting total.\n- Onboarding x chat contributed -0.81 percentage points (own change -10.7%), and Platform x email contributed -0.81 percentage point (own change -4.4%).\n\nAlternative slicings:\n- By team: Platform -2.04 pp\n- By channel: chat -1.12 pp\n- By priority: P4 -0.84 pp"
+  },
+  {
+    "case": "support_metric_trap",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 3,
+    "route": "change",
+    "passed": 5,
+    "total": 5,
+    "seconds": 4.14,
+    "output_tokens": 185,
+    "error": null,
+    "failures": [],
+    "narrative": "Platform x chat contributed -0.91 percentage points of the -1.3% total change, accounting for 13.3% of the starting total.\n\nSupporting facts:\n- Platform x email contributed -0.81 percentage points (own change -4.4%).\n- Onboarding x chat contributed -0.81 percentage point (own change -10.7%)."
+  },
+  {
+    "case": "support_median_resolution",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 1,
+    "route": "code",
+    "passed": 5,
+    "total": 5,
+    "seconds": 8.5,
+    "output_tokens": 217,
+    "error": null,
+    "failures": [],
+    "narrative": "The median resolution time in hours across all tickets is 25.18 hours.\n\nTo compute this:\n- We used the `resolution_hours` column from the DataFrame.\n- The `median()` function was applied to calculate the middle value of the sorted list of resolution times.\n- The result, 25.18 hours, represents the central tendency of the resolution time distribution across all tickets."
+  },
+  {
+    "case": "support_median_resolution",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 2,
+    "route": "code",
+    "passed": 5,
+    "total": 5,
+    "seconds": 3.62,
+    "output_tokens": 137,
+    "error": null,
+    "failures": [],
+    "narrative": "The median resolution time in hours across all tickets is 25.18 hours.\n\nTo compute this:\n- We use `df['resolution_hours'].median()`.\n- The result is printed directly."
+  },
+  {
+    "case": "support_median_resolution",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 3,
+    "route": "code",
+    "passed": 5,
+    "total": 5,
+    "seconds": 4.89,
+    "output_tokens": 207,
+    "error": null,
+    "failures": [],
+    "narrative": "The median resolution time in hours across all tickets is 25.18 hours.\n\nTo compute this:\n- We used `df['resolution_hours'].median()`, which found the middle value of the sorted list of resolution times.\n- The median is a measure of central tendency that is less affected by outliers than the mean, making it suitable for skewed distributions like this one."
+  },
+  {
+    "case": "support_open_tickets",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 1,
+    "route": "change",
+    "passed": 1,
+    "total": 4,
+    "seconds": 5.92,
+    "output_tokens": 241,
+    "error": null,
+    "failures": [
+      {
+        "family": "routing",
+        "name": "routed to code",
+        "detail": "routed to 'change'"
+      },
+      {
+        "family": "correctness",
+        "name": "ran at least 1 successful code block(s)",
+        "detail": "routed to 'change', so no code was generated"
+      },
+      {
+        "family": "correctness",
+        "name": "reports the value 2210",
+        "detail": "found [0.38, 0.39, 0.48, 1.0, 2.0, 3.0], expected ~2210"
+      }
+    ],
+    "narrative": "The largest contributor to the decline in ticket open count between April and May was the P3 x phone segment, contributing an additional 0.48 percentage points of the total change.\n\nSupporting facts:\n- The P3 x phone segment contributed 8.1% to its own change.\n- This is 6.0% of the starting total number of tickets (3,864,192,819).\n- The P2 x phone segment contributed an additional 0.39 percentage points.\n- The P1 x email segment contributed an additional 0.38 percentage points.\n\nThe alternative slicings do not account for the significant portion of the decline explained by the P3 x phone segment."
+  },
+  {
+    "case": "support_open_tickets",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 2,
+    "route": "change",
+    "passed": 1,
+    "total": 4,
+    "seconds": 4.67,
+    "output_tokens": 208,
+    "error": null,
+    "failures": [
+      {
+        "family": "routing",
+        "name": "routed to code",
+        "detail": "routed to 'change'"
+      },
+      {
+        "family": "correctness",
+        "name": "ran at least 1 successful code block(s)",
+        "detail": "routed to 'change', so no code was generated"
+      },
+      {
+        "family": "correctness",
+        "name": "reports the value 2210",
+        "detail": "found [0.3, 0.48, 3.0, 4.0, 5.0, 6.0], expected ~2210"
+      }
+    ],
+    "narrative": "The single largest contributor to the decline in ticket_id from 3,864,192,819.00 to 3,876,370,813.00 between 2026-04 and 2026-05 was P3 x phone (priority x channel), contributing +0.48 percentage points of the +0.3% total change.\n\nThis segment's own change was +8.1%, and it was 6.0% of the starting total."
+  },
+  {
+    "case": "support_open_tickets",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 3,
+    "route": "change",
+    "passed": 1,
+    "total": 4,
+    "seconds": 4.78,
+    "output_tokens": 210,
+    "error": null,
+    "failures": [
+      {
+        "family": "routing",
+        "name": "routed to code",
+        "detail": "routed to 'change'"
+      },
+      {
+        "family": "correctness",
+        "name": "ran at least 1 successful code block(s)",
+        "detail": "routed to 'change', so no code was generated"
+      },
+      {
+        "family": "correctness",
+        "name": "reports the value 2210",
+        "detail": "found [0.3, 0.48, 3.0, 6.0, 8.1, 11.6], expected ~2210"
+      }
+    ],
+    "narrative": "The single largest contributor to the decline in ticket open count between April and May was P3 x phone, contributing an additional 0.48 percentage points of the total change from a 0.3% increase.\n\nSupporting facts:\n- P3 x phone contributed +8.1% to the overall change.\n- This segment's own change was +11.6%, which is 6.0% of the starting total.\n\nThe alternative slicings provided do not contribute significantly to the total decline and are listed as separate contributors, explaining very little of the overall change."
+  },
+  {
+    "case": "support_reopened_count",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 1,
+    "route": "code",
+    "passed": 3,
+    "total": 4,
+    "seconds": 19.53,
+    "output_tokens": 108,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "no invented numbers",
+        "detail": "invented [2688.0] (not in executed output)"
+      }
+    ],
+    "narrative": "There were 2,688 tickets that were reopened."
+  },
+  {
+    "case": "support_reopened_count",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 2,
+    "route": "code",
+    "passed": 3,
+    "total": 4,
+    "seconds": 21.83,
+    "output_tokens": 93,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "no invented numbers",
+        "detail": "invented [2688.0] (not in executed output)"
+      }
+    ],
+    "narrative": "There were 2,688 tickets that were reopened."
+  },
+  {
+    "case": "support_reopened_count",
+    "model": "qwen2.5-coder:1.5b",
+    "attempt": 3,
+    "route": "code",
+    "passed": 3,
+    "total": 4,
+    "seconds": 21.98,
+    "output_tokens": 93,
+    "error": null,
+    "failures": [
+      {
+        "family": "communication",
+        "name": "no invented numbers",
+        "detail": "invented [2688.0] (not in executed output)"
+      }
+    ],
+    "narrative": "There were 2,688 tickets that were reopened."
+  }
+]
