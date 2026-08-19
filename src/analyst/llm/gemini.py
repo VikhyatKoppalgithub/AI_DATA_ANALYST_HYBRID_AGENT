@@ -41,6 +41,20 @@ DEFAULT_GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
 COST_PER_MTOK_IN = 0.0
 COST_PER_MTOK_OUT = 0.0
 
+# Gemini 2.5+ models reason internally before answering, and those tokens are
+# charged against maxOutputTokens. The routing call allows 150, which the model
+# spent thinking — returning JSON cut off mid-string. That surfaced as "Expected
+# JSON matching the schema", a parse error whose real cause was a token cap, and
+# it cost an afternoon to read correctly. Thinking buys nothing on this pipeline:
+# the model picks a column name, or writes three sentences over figures it was
+# handed. It never reasons about arithmetic, by design.
+THINKING_OFF: dict[str, Any] = {"thinkingConfig": {"thinkingBudget": 0}}
+
+# Truncation under a schema is silent — it produces invalid JSON rather than an
+# error — so schema-constrained calls get headroom regardless of what the caller
+# asked for. The pipeline's plans are small; the cost of the floor is nothing.
+MIN_SCHEMA_TOKENS = 512
+
 # JSON Schema keys Gemini's responseSchema does not accept. The pipeline's
 # schemas are plain JSON Schema; passing an unknown key is a 400, so they are
 # stripped rather than hand-maintaining a second copy of each schema.
@@ -91,18 +105,28 @@ class GeminiProvider(Provider):
     # ----------------------------------------------------------------- health
 
     def health(self) -> tuple[bool, str]:
-        """One real generation, because a reachable API with a wrong model name
-        looks identical to a working one until the first question fails."""
+        """Verify the model exists by listing, not by generating.
+
+        The first version here spent a real generateContent call. Streamlit
+        re-runs the whole script on every widget interaction, so that burned a
+        request per keystroke and exhausted the free tier's 15/minute before a
+        question could be asked. Listing costs no generation quota and catches
+        the same failure more precisely — a wrong model name is a name absent
+        from the list, rather than an opaque 404.
+        """
         try:
-            self._post(
-                self.model,
-                {
-                    "contents": [{"role": "user", "parts": [{"text": "ok"}]}],
-                    "generationConfig": {"maxOutputTokens": 1},
-                },
-            )
+            available = self._list_models()
         except ProviderError as exc:
             return False, str(exc)
+
+        if not available:
+            # Listing worked but told us nothing; do not block on it.
+            return True, f"{self.model} (hosted; could not verify the model list)"
+        if self.model not in available:
+            return False, (
+                f"Gemini has no model {self.model!r} for this key."
+                f"{self._suggest_from(available)}"
+            )
         return True, f"{self.model} ready (Gemini free tier, hosted)"
 
     # ------------------------------------------------------------------ call
@@ -146,6 +170,40 @@ class GeminiProvider(Provider):
         "see https://ai.google.dev/gemini-api/docs/models"
     )
 
+    def _list_models(self) -> list[str]:
+        """Models this key can call generateContent on."""
+        request = urllib.request.Request(
+            API_ROOT, headers={"x-goog-api-key": self.api_key}
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=20) as response:
+                payload = json.load(response)
+        except urllib.error.HTTPError as exc:
+            if exc.code in (401, 403):
+                raise ProviderError(
+                    f"Gemini rejected the API key ({exc.code}). Check GEMINI_API_KEY "
+                    "and that the Generative Language API is enabled for it."
+                ) from exc
+            raise ProviderError(f"Gemini returned HTTP {exc.code} listing models.") from exc
+        except urllib.error.URLError as exc:
+            raise ProviderError(f"Cannot reach Gemini ({exc.reason}).") from exc
+
+        return sorted(
+            m.get("name", "").removeprefix("models/")
+            for m in payload.get("models", [])
+            if "generateContent" in m.get("supportedGenerationMethods", [])
+        )
+
+    @staticmethod
+    def _suggest_from(available: list[str]) -> str:
+        # Prefer stable flash models: this pipeline wants cheap and fast, and a
+        # preview name is a worse thing to pin a demo to than a stable one.
+        preferred = [n for n in available if "flash" in n and "preview" not in n]
+        shortlist = (preferred or available)[:6]
+        if not shortlist:
+            return GeminiProvider._DOCS_HINT
+        return " Set GEMINI_MODEL to one this key can use, e.g. " + ", ".join(shortlist)
+
     def _suggest_models(self) -> str:
         """Name the models this key can actually use.
 
@@ -156,27 +214,26 @@ class GeminiProvider(Provider):
         also fails, fall back to the docs link rather than masking the real error.
         """
         try:
-            request = urllib.request.Request(
-                API_ROOT, headers={"x-goog-api-key": self.api_key}
-            )
-            with urllib.request.urlopen(request, timeout=15) as response:
-                payload = json.load(response)
+            return self._suggest_from(self._list_models())
         except Exception:  # noqa: BLE001 — a hint must never replace the real failure
             return self._DOCS_HINT
 
-        usable = sorted(
-            m.get("name", "").removeprefix("models/")
-            for m in payload.get("models", [])
-            if "generateContent" in m.get("supportedGenerationMethods", [])
-        )
-        if not usable:
-            return self._DOCS_HINT
+    def _generate(self, body: dict[str, Any]) -> dict[str, Any]:
+        """POST, withdrawing thinkingConfig if this model refuses to go without it.
 
-        # Prefer stable flash models: this pipeline wants cheap and fast, and a
-        # preview name is a worse thing to pin a demo to than a stable one.
-        preferred = [n for n in usable if "flash" in n and "preview" not in n]
-        shortlist = (preferred or usable)[:6]
-        return " Set GEMINI_MODEL to one this key can use, e.g. " + ", ".join(shortlist)
+        Not every model accepts a zero thinking budget — some reasoning models
+        require one — so the field is sent optimistically and retracted when the
+        API objects, rather than maintaining a hardcoded list of which models
+        support it that would rot the same way the model names do.
+        """
+        try:
+            return self._post(self.model, body)
+        except ProviderError as exc:
+            if "thinking" not in str(exc).lower():
+                raise
+            retry = {**body, "generationConfig": dict(body.get("generationConfig", {}))}
+            retry["generationConfig"].pop("thinkingConfig", None)
+            return self._post(self.model, retry)
 
     @staticmethod
     def _text(payload: dict[str, Any]) -> str:
@@ -213,12 +270,14 @@ class GeminiProvider(Provider):
         config: dict[str, Any] = {
             "maxOutputTokens": max_tokens,
             "temperature": temperature,
+            **THINKING_OFF,
         }
         if schema is not None:
             # Constrained decoding, so structured extraction returns valid JSON
             # instead of prose in a fence that has to be salvaged with a regex.
             config["responseMimeType"] = "application/json"
             config["responseSchema"] = _clean_schema(schema)
+            config["maxOutputTokens"] = max(max_tokens, MIN_SCHEMA_TOKENS)
 
         body = {
             "contents": [{"role": "user", "parts": [{"text": prompt}]}],
@@ -227,7 +286,7 @@ class GeminiProvider(Provider):
         }
 
         started = time.monotonic()
-        payload = self._post(self.model, body)
+        payload = self._generate(body)
         text = self._text(payload)
         input_tokens, output_tokens = self._usage(payload)
 
@@ -273,11 +332,12 @@ class GeminiProvider(Provider):
             "generationConfig": {
                 "maxOutputTokens": max_tokens,
                 "temperature": temperature,
+                **THINKING_OFF,
             },
         }
 
         started = time.monotonic()
-        payload = self._post(self.model, body)
+        payload = self._generate(body)
         input_tokens, output_tokens = self._usage(payload)
 
         return Completion(

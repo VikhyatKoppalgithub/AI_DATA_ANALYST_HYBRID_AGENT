@@ -110,16 +110,28 @@ with st.sidebar:
     if GEMINI_KEY:
         model = st.text_input("Gemini model", value=DEFAULT_GEMINI_MODEL)
         provider = GeminiProvider(GEMINI_KEY, model)
-        reachable, status = provider.health()
-        (st.success if reachable else st.error)(status)
-        if not reachable:
-            st.caption("Set `GEMINI_MODEL` to a current model name to fix this.")
     else:
         model = st.text_input("Ollama model", value=DEFAULT_MODEL)
         provider = OllamaProvider(model)
-        reachable, status = provider.health()
-        (st.success if reachable else st.error)(status)
-        if not reachable:
+
+    # Streamlit re-runs the whole script on every widget interaction, so an
+    # unmemoised health check fires one request per keystroke. Against Gemini's
+    # 15-per-minute free tier that exhausted the quota before a question could
+    # be asked. Check once per (provider, model) instead.
+    health_key = (provider.info.name, model)
+    if st.session_state.get("health_key") != health_key:
+        st.session_state["health_key"] = health_key
+        st.session_state["health"] = provider.health()
+    reachable, status = st.session_state["health"]
+
+    (st.success if reachable else st.error)(status)
+    if not reachable:
+        # A cached failure would otherwise persist for the session, which is
+        # wrong when the cause was a transient rate limit rather than a bad name.
+        if st.button("Re-check", width="stretch"):
+            st.session_state["health"] = provider.health()
+            st.rerun()
+        if not GEMINI_KEY:
             st.code("brew services start ollama\nollama pull " + model, language="bash")
 
     st.caption(
@@ -296,7 +308,12 @@ with ask_tab:
     )
 
     if not reachable:
-        st.warning("Start Ollama to ask questions. The other tabs work without it.")
+        reason = (
+            "The hosted model is unavailable — see the sidebar for why."
+            if GEMINI_KEY
+            else "Start Ollama to ask questions."
+        )
+        st.warning(f"{reason} The other tabs work without it.")
 
     if run and question.strip():
         # One session per (dataset, model), kept in session_state. Building a new

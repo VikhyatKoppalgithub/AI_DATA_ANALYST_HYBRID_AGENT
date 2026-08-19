@@ -127,6 +127,73 @@ def test_a_plain_request_does_not_ask_for_json(capture):
     assert "responseMimeType" not in capture["body"]["generationConfig"]
 
 
+def test_thinking_is_disabled_on_every_call(capture):
+    """2.5+ models bill internal reasoning against maxOutputTokens. With the
+    routing call capped at 150 the model spent the budget thinking and returned
+    JSON truncated mid-string — which surfaced as a schema parse error rather
+    than as a token limit. Nothing here needs the model to reason."""
+    capture["reply"] = _reply("ok")
+    GeminiProvider("k").complete(system="s", prompt="p")
+    assert capture["body"]["generationConfig"]["thinkingConfig"]["thinkingBudget"] == 0
+
+    capture["reply"] = _reply("ok")
+    GeminiProvider("k").chat(system="s", messages=[Message(role="user", content="q")])
+    assert capture["body"]["generationConfig"]["thinkingConfig"]["thinkingBudget"] == 0
+
+
+def test_schema_calls_get_token_headroom(capture):
+    """Truncation under a schema is silent — invalid JSON, not an error — so a
+    caller's small budget must not be taken literally."""
+    capture["reply"] = _reply('{"route":"other","reason":"r"}')
+    GeminiProvider("k").complete(
+        system="s", prompt="p", schema=ROUTE_SCHEMA, max_tokens=150
+    )
+    assert capture["body"]["generationConfig"]["maxOutputTokens"] >= 512
+
+
+def test_a_model_that_rejects_a_zero_thinking_budget_is_retried_without_it(monkeypatch):
+    """Some reasoning models require a thinking budget. Rather than hardcode
+    which — a list that would rot like the model names did — send it and
+    withdraw it if the API objects."""
+    bodies: list[dict] = []
+
+    def fake_urlopen(request, timeout=None):  # noqa: ARG001
+        body = json.loads(request.data.decode())
+        bodies.append(body)
+        if "thinkingConfig" in body.get("generationConfig", {}):
+            raise urllib.error.HTTPError(
+                request.full_url,
+                400,
+                "bad request",
+                {},
+                io.BytesIO(b'{"error":{"message":"thinking budget not supported"}}'),
+            )
+        return _reply("recovered")
+
+    monkeypatch.setattr("analyst.llm.gemini.urllib.request.urlopen", fake_urlopen)
+    completion = GeminiProvider("k").complete(system="s", prompt="p")
+
+    assert completion.text == "recovered"
+    assert len(bodies) == 2
+    assert "thinkingConfig" not in bodies[1]["generationConfig"]
+
+
+def test_an_unrelated_400_is_not_retried(monkeypatch):
+    """The retry must key on the actual complaint, not swallow every 400."""
+    attempts: list[int] = []
+
+    def fake_urlopen(request, timeout=None):  # noqa: ARG001
+        attempts.append(1)
+        raise urllib.error.HTTPError(
+            request.full_url, 400, "bad", {}, io.BytesIO(b'{"error":"malformed schema"}')
+        )
+
+    monkeypatch.setattr("analyst.llm.gemini.urllib.request.urlopen", fake_urlopen)
+    with pytest.raises(ProviderError):
+        GeminiProvider("k").complete(system="s", prompt="p")
+    assert len(attempts) == 1
+
+
 def test_the_api_key_travels_as_a_header_not_a_query_parameter(capture):
     """?key=... leaks into logs and proxy records; a header does not."""
     capture["reply"] = _reply("ok")
@@ -262,16 +329,60 @@ def test_a_missing_key_fails_at_construction(monkeypatch):
         GeminiProvider("")
 
 
-def test_health_reports_a_bad_model_instead_of_claiming_ready(monkeypatch):
-    """A reachable API with a wrong model name looks healthy until the first
-    real question fails, so health() makes an actual generation call."""
+def _listing_urlopen(names: list[str], calls: list[str] | None = None):
+    """urlopen that answers ListModels and records what was requested."""
 
     def fake_urlopen(request, timeout=None):  # noqa: ARG001
-        raise urllib.error.HTTPError(
-            request.full_url, 404, "not found", {}, io.BytesIO(b"{}")
+        if calls is not None:
+            calls.append(request.full_url)
+        return _FakeResponse(
+            json.dumps(
+                {
+                    "models": [
+                        {
+                            "name": f"models/{n}",
+                            "supportedGenerationMethods": ["generateContent"],
+                        }
+                        for n in names
+                    ]
+                }
+            ).encode()
         )
 
-    monkeypatch.setattr("analyst.llm.gemini.urllib.request.urlopen", fake_urlopen)
+    return fake_urlopen
+
+
+def test_health_reports_a_bad_model_instead_of_claiming_ready(monkeypatch):
+    monkeypatch.setattr(
+        "analyst.llm.gemini.urllib.request.urlopen",
+        _listing_urlopen(["gemini-2.5-flash", "gemini-3.5-flash"]),
+    )
     ok, status = GeminiProvider("k", "gemini-does-not-exist").health()
     assert not ok
     assert "no model" in status
+    assert "gemini-2.5-flash" in status, "should name a model that would work"
+
+
+def test_health_passes_when_the_model_is_listed(monkeypatch):
+    monkeypatch.setattr(
+        "analyst.llm.gemini.urllib.request.urlopen",
+        _listing_urlopen(["gemini-2.5-flash"]),
+    )
+    ok, status = GeminiProvider("k", "gemini-2.5-flash").health()
+    assert ok
+    assert "ready" in status
+
+
+def test_health_spends_no_generation_quota(monkeypatch):
+    """Streamlit re-runs the script on every keystroke. health() generating a
+    token per re-run exhausted the free tier's 15/minute before a question
+    could be asked, so it must only ever list."""
+    calls: list[str] = []
+    monkeypatch.setattr(
+        "analyst.llm.gemini.urllib.request.urlopen",
+        _listing_urlopen(["gemini-2.5-flash"], calls),
+    )
+    GeminiProvider("k", "gemini-2.5-flash").health()
+
+    assert calls, "health() should have called the API"
+    assert not any(":generateContent" in url for url in calls)
