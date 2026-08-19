@@ -1,0 +1,14 @@
+# Streamlit Community Cloud installs from this file. It duplicates the runtime
+# dependencies in pyproject.toml because Streamlit Cloud does not read PEP 621
+# metadata — pytest and the other dev extras are deliberately absent, since the
+# deployment does not run tests.
+#
+# app.py puts src/ on sys.path itself, so the `analyst` package needs no install.
+pandas>=2.2
+numpy>=1.26
+matplotlib>=3.8
+duckdb>=1.0
+openpyxl>=3.1
+pyarrow>=15.0
+streamlit>=1.40
+plotly>=5.20

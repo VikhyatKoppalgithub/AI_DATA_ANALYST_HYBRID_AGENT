@@ -33,8 +33,24 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from analyst.analysis import ChangeAnalysis
-from analyst.llm import OllamaProvider, ProviderError
+from analyst.llm import GeminiProvider, OllamaProvider, ProviderError
+from analyst.llm.gemini import DEFAULT_GEMINI_MODEL
 from analyst.llm.ollama import DEFAULT_MODEL
+
+
+def _gemini_key() -> str | None:
+    """A Gemini key from the environment or Streamlit secrets, if either has one.
+
+    Reading st.secrets raises when no secrets file exists, which is the normal
+    case on a laptop — so absence has to be caught rather than checked.
+    """
+    key = os.environ.get("GEMINI_API_KEY")
+    if key:
+        return key
+    try:
+        return st.secrets["GEMINI_API_KEY"]  # type: ignore[no-any-return]
+    except Exception:  # noqa: BLE001 — no secrets file, or no such key
+        return None
 from analyst.prepare import prepare_frame
 from analyst.profiler import load_and_profile, profile_dataframe
 from analyst.session import AnalystSession
@@ -82,14 +98,29 @@ st.markdown(
 # ----------------------------------------------------------------- sidebar
 
 
+GEMINI_KEY = _gemini_key()
+
 with st.sidebar:
     st.subheader("Model")
-    model = st.text_input("Ollama model", value=DEFAULT_MODEL)
-    provider = OllamaProvider(model)
-    reachable, status = provider.health()
-    (st.success if reachable else st.error)(status)
-    if not reachable:
-        st.code("brew services start ollama\nollama pull " + model, language="bash")
+
+    # Local Ollama is the default and the design intent. A hosted provider takes
+    # over only where no local model can exist — a deployed demo — and the same
+    # Provider interface serves both, which is the abstraction paying for itself
+    # rather than being asserted in a README.
+    if GEMINI_KEY:
+        model = st.text_input("Gemini model", value=DEFAULT_GEMINI_MODEL)
+        provider = GeminiProvider(GEMINI_KEY, model)
+        reachable, status = provider.health()
+        (st.success if reachable else st.error)(status)
+        if not reachable:
+            st.caption("Set `GEMINI_MODEL` to a current model name to fix this.")
+    else:
+        model = st.text_input("Ollama model", value=DEFAULT_MODEL)
+        provider = OllamaProvider(model)
+        reachable, status = provider.health()
+        (st.success if reachable else st.error)(status)
+        if not reachable:
+            st.code("brew services start ollama\nollama pull " + model, language="bash")
 
     st.caption(
         "The model only reads the question and writes the explanation. "
@@ -102,14 +133,18 @@ with st.sidebar:
 # -------------------------------------------------------------- ingestion
 
 
-if DEMO_MODE:
+# Gated on the key rather than a flag: a Gemini key present *is* the hosted
+# deployment, and Streamlit Cloud's secrets do not reliably reach os.environ.
+if GEMINI_KEY or DEMO_MODE:
     st.info(
-        "**Live demo — running `qwen2.5-coder:1.5b` on 2 CPU cores.** The "
-        "published 98% eval score is the 14B on a Mac; this model scores 80% on "
-        "the same suite, and mostly loses on routing. Expect a minute or more "
-        "per question. Keeping the demo free and key-less is the tradeoff — the "
-        "**Data profile** tab needs no model at all.",
-        icon="🐌",
+        "**Live demo, hosted model.** The project is built to run fully local on "
+        "Ollama at $0.00 per query — that is still the default, and it is what "
+        "the published 98% eval score was measured on. No free host runs a local "
+        "LLM, so this deployment points the same pipeline at Gemini's free tier "
+        "instead. Nothing else changed: one `Provider` implementation swapped, "
+        "identical analysis code, and every figure below is still computed in "
+        "pandas rather than generated.",
+        icon="☁️",
     )
 
 uploaded = st.file_uploader("Upload a CSV or Excel file", type=["csv", "xlsx", "xlsm", "parquet"])
@@ -272,7 +307,15 @@ with ask_tab:
             previous = st.session_state.get("session")
             if previous is not None:
                 previous.close()
-            st.session_state["session"] = AnalystSession(provider, data, workdir=OUTPUTS)
+            # The sandbox spawns a subprocess and sets rlimits, which some
+            # managed hosts disallow. Rather than have the code route fail
+            # mysteriously there, it can be turned off without a code change.
+            st.session_state["session"] = AnalystSession(
+                provider,
+                data,
+                workdir=OUTPUTS,
+                allow_codegen=os.environ.get("ANALYST_NO_CODEGEN") != "1",
+            )
             st.session_state["session_key"] = key
         session = st.session_state["session"]
 

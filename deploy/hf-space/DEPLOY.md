@@ -1,5 +1,15 @@
 # Deploying the live demo to a Hugging Face Space
 
+> **Superseded — this route now costs $9/month.** Hugging Face has made Docker
+> and Gradio Spaces PRO-only; only Static Spaces (no compute, no Python) remain
+> free, so this Dockerfile cannot run on a free account. It is kept because it is
+> the only way to demo the project *as designed* — a local model, no API key —
+> and because it works unchanged if you ever take a PRO plan.
+>
+> The free route is `deploy/streamlit/DEPLOY.md`, which trades the local model
+> for Gemini's free tier.
+
+
 Three files go in the Space; the app itself is cloned from GitHub at build time,
 so the Space repo stays small and a rebuild picks up the latest `main`.
 
