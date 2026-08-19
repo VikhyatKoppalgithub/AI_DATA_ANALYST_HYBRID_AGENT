@@ -14,6 +14,7 @@ Two details that matter and are easy to get wrong:
 from __future__ import annotations
 
 import json
+import os
 import time
 import urllib.error
 import urllib.request
@@ -22,7 +23,10 @@ from typing import Any
 from analyst.llm.base import Completion, Message, Provider, ProviderError, ProviderInfo
 
 DEFAULT_HOST = "http://127.0.0.1:11434"
-DEFAULT_MODEL = "qwen2.5-coder:14b"
+# Env-overridable so a deployment can pin a different model without forking the
+# code. The Hugging Face Space sets it to qwen2.5-coder:1.5b, which is what a
+# free 2-vCPU container can actually serve; the 14B here is the machine default.
+DEFAULT_MODEL = os.environ.get("ANALYST_MODEL", "qwen2.5-coder:14b")
 DEFAULT_NUM_CTX = 8192
 
 

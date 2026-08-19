@@ -10,8 +10,14 @@ shown next to it rather than hidden behind an expander.
 
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
+
+# Set by the Hugging Face Space, which runs the 1.5b on 2 CPU cores. A visitor
+# who does not know that reads slow, weaker answers as the project being bad,
+# rather than as the documented cost of keeping the demo free and key-less.
+DEMO_MODE = os.environ.get("ANALYST_DEMO") == "1"
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
@@ -95,6 +101,16 @@ with st.sidebar:
 
 # -------------------------------------------------------------- ingestion
 
+
+if DEMO_MODE:
+    st.info(
+        "**Live demo — running `qwen2.5-coder:1.5b` on 2 CPU cores.** The "
+        "published 98% eval score is the 14B on a Mac; this model scores 80% on "
+        "the same suite, and mostly loses on routing. Expect a minute or more "
+        "per question. Keeping the demo free and key-less is the tradeoff — the "
+        "**Data profile** tab needs no model at all.",
+        icon="🐌",
+    )
 
 uploaded = st.file_uploader("Upload a CSV or Excel file", type=["csv", "xlsx", "xlsm", "parquet"])
 demo = st.checkbox("Use the bundled demo dataset instead", value=not uploaded)
