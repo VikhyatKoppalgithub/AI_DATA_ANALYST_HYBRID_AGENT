@@ -251,6 +251,21 @@ class GeminiProvider(Provider):
         return ""
 
     @staticmethod
+    def _finish_reason(payload: dict[str, Any]) -> str:
+        """Why generation stopped.
+
+        The difference between "the model wrote prose" and "the model was cut
+        off" is invisible in the text alone — both arrive as a fragment that
+        fails to parse — but it points at completely different fixes. MAX_TOKENS
+        means raise the budget; STOP means the schema was not applied.
+        """
+        for candidate in payload.get("candidates", []):
+            reason = candidate.get("finishReason")
+            if reason:
+                return str(reason)
+        return "unknown"
+
+    @staticmethod
     def _usage(payload: dict[str, Any]) -> tuple[int, int]:
         usage = payload.get("usageMetadata", {})
         return (
@@ -295,8 +310,23 @@ class GeminiProvider(Provider):
             try:
                 data = json.loads(text)
             except json.JSONDecodeError as exc:
+                # Name the stop reason and the budget. "got: Here is" is
+                # ambiguous between a truncated reply and a prose one, and the
+                # two need opposite fixes.
+                reason = self._finish_reason(payload)
+                hint = {
+                    "MAX_TOKENS": (
+                        " — the reply was cut off, so raise maxOutputTokens"
+                    ),
+                    "STOP": (
+                        " — the model finished normally without honouring the "
+                        "schema, so responseSchema was not applied"
+                    ),
+                }.get(reason, "")
                 raise ProviderError(
-                    f"Expected JSON matching the schema, got:\n{text[:400]}"
+                    f"Expected JSON matching the schema. finishReason={reason}, "
+                    f"{output_tokens} output tokens of "
+                    f"{config['maxOutputTokens']} allowed{hint}.\nGot: {text[:300]!r}"
                 ) from exc
 
         return Completion(

@@ -19,6 +19,11 @@ from pathlib import Path
 # rather than as the documented cost of keeping the demo free and key-less.
 DEMO_MODE = os.environ.get("ANALYST_DEMO") == "1"
 
+# Shown in the sidebar. A managed host redeploys on its own schedule, so "is the
+# fix live yet?" was being answered by guessing at error messages. Bump on any
+# change that needs confirming in a deployment.
+BUILD = "2026-08-19.5"
+
 PROJECT_ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 DEMO_DATA = PROJECT_ROOT / "data" / "sales_2026.csv"
@@ -138,6 +143,7 @@ with st.sidebar:
         "The model only reads the question and writes the explanation. "
         "Every figure is computed in pandas and checked before it is shown."
     )
+    st.caption(f"build {BUILD}")
     st.divider()
     dedupe = st.checkbox("Remove duplicated rows", value=True)
 
