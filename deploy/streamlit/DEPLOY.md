@@ -56,7 +56,7 @@ back to looking for a local Ollama, which is what you want on your laptop.
 
 | what | expected |
 |---|---|
-| Sidebar | green, `gemini-2.0-flash ready (Gemini free tier, hosted)` |
+| Sidebar | green, `gemini-2.5-flash ready (Gemini free tier, hosted)` |
 | Banner | cloud icon, explaining the hosted swap |
 | **Data profile** tab | renders instantly, needs no model |
 | *"Why did revenue drop in March?"* | verified answer, `Laptop x West −11.08 pp`, six green checks |
@@ -66,7 +66,7 @@ back to looking for a local Ollama, which is what you want on your laptop.
 
 | symptom | cause | fix |
 |---|---|---|
-| Sidebar red, `no model 'gemini-2.0-flash'` | Google renamed or retired it | add `GEMINI_MODEL = "gemini-2.5-flash"` to Secrets |
+| Sidebar red, `no model ...` | Google renamed or retired it | the error now lists models your key can use — copy one into Secrets as `GEMINI_MODEL` |
 | Red, `rejected the API key` | key wrong, or the Generative Language API is not enabled on it | regenerate at aistudio.google.com |
 | `rate limit hit` under traffic | free tier is 15 req/min; each verified answer is 3 calls | expected at ~5 questions/minute; wait, or upgrade the key |
 | Code-route questions error out | the host blocks subprocesses or `rlimit` | add `ANALYST_NO_CODEGEN = "1"` to Secrets — the verified path keeps working |
@@ -74,7 +74,7 @@ back to looking for a local Ollama, which is what you want on your laptop.
 
 ## What is untested
 
-The Gemini provider has 16 unit tests, all of which substitute the network, so
+The Gemini provider has 18 unit tests, all of which substitute the network, so
 its request shape, role mapping, schema cleaning, and error handling are
 verified — but **no real call to Google has ever been made from this code**. I
 have no API key and should not have one. The first genuine request happens on

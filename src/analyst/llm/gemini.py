@@ -30,8 +30,10 @@ from analyst.llm.base import Completion, Message, Provider, ProviderError, Provi
 
 API_ROOT = "https://generativelanguage.googleapis.com/v1beta/models"
 # Overridable: Google renames and retires these, and a demo that dies on a model
-# rename should be fixable with an env var rather than a commit.
-DEFAULT_GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
+# rename should be fixable with an env var rather than a commit. `gemini-2.0-flash`
+# was the first default here and was already retired by deploy day, which is why
+# a 404 now lists what the key can actually use instead of pointing at the docs.
+DEFAULT_GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
 
 # Free-tier flash models bill nothing, so the ledger stays honest at zero rather
 # than inventing a price. If a paid model is configured this under-reports, which
@@ -128,8 +130,7 @@ class GeminiProvider(Provider):
                 ) from exc
             if exc.code == 404:
                 raise ProviderError(
-                    f"Gemini has no model {model!r}. Set GEMINI_MODEL to a current "
-                    "one — see https://ai.google.dev/gemini-api/docs/models"
+                    f"Gemini has no model {model!r}.{self._suggest_models()}"
                 ) from exc
             if exc.code == 429:
                 raise ProviderError(
@@ -139,6 +140,43 @@ class GeminiProvider(Provider):
             raise ProviderError(f"Gemini returned HTTP {exc.code}: {detail}") from exc
         except urllib.error.URLError as exc:
             raise ProviderError(f"Cannot reach Gemini ({exc.reason}).") from exc
+
+    _DOCS_HINT = (
+        " Set GEMINI_MODEL to a current one — "
+        "see https://ai.google.dev/gemini-api/docs/models"
+    )
+
+    def _suggest_models(self) -> str:
+        """Name the models this key can actually use.
+
+        Google retires model names on its own schedule, so "no such model" is a
+        routine failure rather than a typo — the first default committed here was
+        already dead by the time the demo deployed. Listing what is available
+        turns a docs search into a copy-paste. Best-effort: if the listing call
+        also fails, fall back to the docs link rather than masking the real error.
+        """
+        try:
+            request = urllib.request.Request(
+                API_ROOT, headers={"x-goog-api-key": self.api_key}
+            )
+            with urllib.request.urlopen(request, timeout=15) as response:
+                payload = json.load(response)
+        except Exception:  # noqa: BLE001 — a hint must never replace the real failure
+            return self._DOCS_HINT
+
+        usable = sorted(
+            m.get("name", "").removeprefix("models/")
+            for m in payload.get("models", [])
+            if "generateContent" in m.get("supportedGenerationMethods", [])
+        )
+        if not usable:
+            return self._DOCS_HINT
+
+        # Prefer stable flash models: this pipeline wants cheap and fast, and a
+        # preview name is a worse thing to pin a demo to than a stable one.
+        preferred = [n for n in usable if "flash" in n and "preview" not in n]
+        shortlist = (preferred or usable)[:6]
+        return " Set GEMINI_MODEL to one this key can use, e.g. " + ", ".join(shortlist)
 
     @staticmethod
     def _text(payload: dict[str, Any]) -> str:

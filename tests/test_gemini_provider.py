@@ -200,6 +200,62 @@ def test_http_errors_carry_the_fix(monkeypatch, code, expected):
         GeminiProvider("k").complete(system="s", prompt="p")
 
 
+def test_a_retired_model_error_names_models_the_key_can_use(monkeypatch):
+    """Google retires names on its own schedule — the first default committed
+    here was already dead on deploy day. The error should be copy-pasteable."""
+    calls: list[str] = []
+
+    def fake_urlopen(request, timeout=None):  # noqa: ARG001
+        calls.append(request.full_url)
+        if request.full_url.endswith(":generateContent"):
+            raise urllib.error.HTTPError(
+                request.full_url, 404, "not found", {}, io.BytesIO(b"{}")
+            )
+        # The ListModels call that follows.
+        return _FakeResponse(
+            json.dumps(
+                {
+                    "models": [
+                        {
+                            "name": "models/gemini-2.5-flash",
+                            "supportedGenerationMethods": ["generateContent"],
+                        },
+                        {
+                            "name": "models/gemini-3.5-flash",
+                            "supportedGenerationMethods": ["generateContent"],
+                        },
+                        {  # embeddings cannot answer a question — must not appear
+                            "name": "models/text-embedding-004",
+                            "supportedGenerationMethods": ["embedContent"],
+                        },
+                    ]
+                }
+            ).encode()
+        )
+
+    monkeypatch.setattr("analyst.llm.gemini.urllib.request.urlopen", fake_urlopen)
+    with pytest.raises(ProviderError) as caught:
+        GeminiProvider("k", "gemini-2.0-flash").complete(system="s", prompt="p")
+
+    message = str(caught.value)
+    assert "gemini-2.5-flash" in message
+    assert "text-embedding-004" not in message
+    assert len(calls) == 2, "should have listed models after the 404"
+
+
+def test_a_failed_listing_falls_back_to_the_docs_link(monkeypatch):
+    """The hint is best-effort and must never mask the real failure."""
+
+    def fake_urlopen(request, timeout=None):  # noqa: ARG001
+        raise urllib.error.HTTPError(
+            request.full_url, 404, "not found", {}, io.BytesIO(b"{}")
+        )
+
+    monkeypatch.setattr("analyst.llm.gemini.urllib.request.urlopen", fake_urlopen)
+    with pytest.raises(ProviderError, match="ai.google.dev"):
+        GeminiProvider("k", "nope").complete(system="s", prompt="p")
+
+
 def test_a_missing_key_fails_at_construction(monkeypatch):
     monkeypatch.delenv("GEMINI_API_KEY", raising=False)
     with pytest.raises(ProviderError, match="No Gemini API key"):
