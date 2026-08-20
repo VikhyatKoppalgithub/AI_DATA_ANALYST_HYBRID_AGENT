@@ -22,7 +22,7 @@ DEMO_MODE = os.environ.get("ANALYST_DEMO") == "1"
 # Shown in the sidebar. A managed host redeploys on its own schedule, so "is the
 # fix live yet?" was being answered by guessing at error messages. Bump on any
 # change that needs confirming in a deployment.
-BUILD = "2026-08-19.5"
+BUILD = "2026-08-20.1"
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
@@ -146,6 +146,11 @@ with st.sidebar:
     st.caption(f"build {BUILD}")
     st.divider()
     dedupe = st.checkbox("Remove duplicated rows", value=True)
+
+# The run footers said "local model calls" unconditionally, which is a false
+# statement on the hosted deployment — and precisely the kind of unchecked claim
+# this project exists to not make.
+WHERE = "local" if provider.info.local else "hosted"
 
 
 # -------------------------------------------------------------- ingestion
@@ -387,7 +392,7 @@ with ask_tab:
                     st.image(str(path))
 
             st.caption(
-                f"route: generated code · {len(answer.completions)} local model calls · "
+                f"route: generated code · {len(answer.completions)} {WHERE} model calls · "
                 f"{answer.output_tokens:,} output tokens · {answer.seconds:.1f}s · $0.00"
             )
             st.stop()
@@ -467,6 +472,6 @@ with ask_tab:
                     st.write(f"• {note}")
 
         st.caption(
-            f"route: verified change analysis · {len(answer.completions)} local model "
+            f"route: verified change analysis · {len(answer.completions)} {WHERE} model "
             f"calls · {answer.output_tokens:,} output tokens · {answer.seconds:.1f}s · $0.00"
         )
