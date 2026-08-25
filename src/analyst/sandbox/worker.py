@@ -24,6 +24,11 @@ from pathlib import Path
 from typing import Any
 
 WORKER_FILENAME = "<analysis>"
+# This module's own path, so its frames can be excluded by identity rather than
+# by a substring match on the name. The exec/eval call sits directly above the
+# model's code in every traceback, and showing it leaks the harness into what is
+# supposed to be a clean report of the model's own failure.
+WORKER_SOURCE = os.path.abspath(__file__)
 MAX_REPR_CHARS = 4000
 MAX_STDOUT_CHARS = 12000
 
@@ -102,13 +107,29 @@ def _clean_traceback(exc: BaseException) -> str:
         # rendering already carries the file, line, and a caret at the offset.
         return "".join(traceback.format_exception_only(type(exc), exc)).rstrip()
 
-    entries = traceback.extract_tb(exc.__traceback__)
-    user_frames = [f for f in entries if f.filename == WORKER_FILENAME]
-    lines = ["Traceback (most recent call last):"]
-    lines += [
-        f'  File "{f.filename}", line {f.lineno}\n    {(f.line or "").strip()}'
-        for f in (user_frames or entries[-3:])
+    entries = [
+        f
+        for f in traceback.extract_tb(exc.__traceback__)
+        if os.path.abspath(f.filename or "") != WORKER_SOURCE
     ]
+    user_frames = [f for f in entries if f.filename == WORKER_FILENAME]
+    shown = list(user_frames or entries[-3:])
+
+    # Hiding library frames is right when the model's own code is at fault — a
+    # KeyError on a column it invented needs the line it wrote, not pandas
+    # internals. It is wrong when the exception was raised *below* that line: a
+    # parquet read failing inside pyarrow rendered as a bare TypeError against
+    # `df = pd.read_parquet(...)`, naming nothing anyone could act on. When the
+    # deepest frame is not the model's, keep the tail that says where it broke.
+    if user_frames and entries and entries[-1].filename != WORKER_FILENAME:
+        shown += [f for f in entries[-3:] if f.filename != WORKER_FILENAME]
+
+    lines = ["Traceback (most recent call last):"]
+    for f in shown:
+        where = f'  File "{f.filename}", line {f.lineno}'
+        if f.filename != WORKER_FILENAME and f.name:
+            where += f", in {f.name}"
+        lines.append(f'{where}\n    {(f.line or "").strip()}')
     lines += traceback.format_exception_only(type(exc), exc)
     return "".join(l if l.endswith("\n") else l + "\n" for l in lines).rstrip()
 

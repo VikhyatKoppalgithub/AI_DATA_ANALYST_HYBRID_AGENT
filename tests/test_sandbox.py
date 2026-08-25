@@ -55,6 +55,31 @@ def test_worker_frames_are_stripped_from_tracebacks(kernel):
     assert "<analysis>" in result.error["traceback"]
 
 
+def test_a_failure_inside_a_library_names_the_library(kernel):
+    """Hiding every non-user frame is right when the model's own line is wrong,
+    and wrong when the exception was raised below it. A parquet read failing
+    inside pyarrow rendered as a bare TypeError against the read_parquet call,
+    which named nothing that could be acted on."""
+    result = kernel.execute("import json\njson.JSONDecoder().decode(None)")
+    assert not result.ok
+
+    trace = result.error["traceback"]
+    assert "<analysis>" in trace, "the model's own line must still be shown"
+    assert "json" in trace, "the frame that actually raised must survive"
+    assert "worker.py" not in trace, "worker internals stay hidden"
+
+
+def test_a_failure_in_the_models_own_code_stays_uncluttered(kernel):
+    """The other direction: when the model's line is the whole story, library
+    frames must not be bolted on."""
+    result = kernel.execute("d = {}\nd['nope']")
+    assert not result.ok
+
+    trace = result.error["traceback"]
+    assert "<analysis>" in trace
+    assert trace.count("File ") == 1, f"expected one frame, got:\n{trace}"
+
+
 def test_error_does_not_destroy_the_namespace(kernel):
     kernel.execute("keep = 'safe'")
     kernel.execute("1 / 0")

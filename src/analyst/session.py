@@ -74,6 +74,15 @@ NON_SUMMABLE = re.compile(
 )
 
 
+def _bootstrap_for(path: Path, reader: str) -> str:
+    """The snippet the kernel replays on every restart to bring `df` back."""
+    return (
+        "import pandas as pd, numpy as np\n"
+        f"df = pd.{reader}(r'{path.resolve()}')\n"
+        "len(df)"
+    )
+
+
 @dataclass
 class RoutedAnswer:
     question: str
@@ -154,11 +163,19 @@ class AnalystSession:
         snapshot, reader = self._write_snapshot()
 
         kernel = Kernel(self.workdir, timeout=90)
-        boot = kernel.set_bootstrap(
-            "import pandas as pd, numpy as np\n"
-            f"df = pd.{reader}(r'{snapshot.resolve()}')\n"
-            "len(df)"
-        )
+        boot = kernel.set_bootstrap(_bootstrap_for(snapshot, reader))
+
+        # Writing parquet successfully does not mean reading it will succeed.
+        # The write happens here and is checked; the read happens inside the
+        # worker, and on a managed host an Arrow/pandas skew broke the read while
+        # the write was fine — taking the entire code route down with it. Pickle
+        # is permissive and equally faithful to dtypes, so retry through it
+        # rather than lose the route.
+        if not boot.ok and reader == "read_parquet":
+            pickled = self.workdir / "_prepared.pkl"
+            self.data.frame.to_pickle(pickled)
+            boot = kernel.set_bootstrap(_bootstrap_for(pickled, "read_pickle"))
+
         if not boot.ok:
             kernel.shutdown()
             raise RuntimeError(f"sandbox failed to load the data:\n{boot.to_model_text()}")
